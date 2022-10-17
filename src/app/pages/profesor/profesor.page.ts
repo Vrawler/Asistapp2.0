@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { v4  } from 'uuid';
 
 @Component({
   selector: 'app-profesor',
@@ -9,8 +10,13 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 })
 export class ProfesorPage implements OnInit {
 
+  //Variables que reciben los datos de ingreso
   rut: string;
   usuario: any;
+
+  //Variables para el cod. qr
+  elementType = 'canvas';
+  value = '';
 
   constructor(private activatedRoute: ActivatedRoute, private usuarioService: UsuarioService) { }
 
@@ -18,6 +24,12 @@ export class ProfesorPage implements OnInit {
     this.rut = this.activatedRoute.snapshot.paramMap.get('rut');
     this.usuario = this.usuarioService.obtenerUsuario(this.rut);
     console.table(this.usuario)
+  }
+
+  generarQR(){
+    if(this.value == ''){
+      this.value = v4();
+    }
   }
 
 }

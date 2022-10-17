@@ -10,7 +10,9 @@
       <img src="../../../assets/img/duoc.png" alt="" width="100px">
       <img src="../../../assets/img/icono_profesor.png" alt="" width="200">
 
-      <ion-button color="primary"  size="xl" class="boton">
+      <ngx-qrcode [elementType]="elementType" [value]="value"></ngx-qrcode>
+      <ion-input placeholder="ingrese texto" color="color" [(ngModel)]="value" disabled="true"></ion-input>
+      <ion-button color="primary"  size="small" class="boton" (click)="generarQR()">
         Código QR
       </ion-button>
 
