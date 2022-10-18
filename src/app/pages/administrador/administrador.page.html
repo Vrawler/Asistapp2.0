@@ -6,7 +6,7 @@
   </ion-card-header>
 
   <ion-card-content>
-    <form [formGroup]="usuario" (ngSubmit)="registrar()">  
+    <form [formGroup]="usuarios" (ngSubmit)="registrar()">  
       <ion-item>
         <ion-label position="stacked">Rut</ion-label>
         <ion-input type="text" placeholder="Ingrese rut con puntos y guión" formControlName="rut"></ion-input>
@@ -49,7 +49,7 @@
           [ngModelOptions]="{standalone: 'true'}"></ion-input>
       </ion-item>
 
-      <ion-button type="submit" [disabled]="!usuario.valid">REGISTRAR</ion-button>
+      <ion-button type="submit" [disabled]="!usuarios.valid">REGISTRAR</ion-button>
       <ion-button (click)="modificar()">MODIFICAR</ion-button>
       <ion-button (click)="limpiar()">LIMPIAR</ion-button>
     </form>
@@ -58,9 +58,9 @@
   <ion-card-content> 
     <h1>LISTA DE USUARIOS</h1>
         <ion-list class="lista" *ngFor="let usuario of usuarios">
-        <p>{{usuario.rut}} - {{usuario.nom_com}} - {{usuario.fec_nac}} - {{usuario.semestre}}</p>
-        <ion-button color="warning" (click)="buscar(usuario.rut)">Buscar</ion-button>
-        <ion-button color="danger" (click)="eliminar(usuario.rut)">Eliminar</ion-button>
+        <p>{{usuarios.rut}} - {{usuarios.nom_com}} - {{usuarios.fec_nac}} - {{usuarios.semestre}}</p>
+        <ion-button color="warning" (click)="buscar(usuarios.rut)">Buscar</ion-button>
+        <ion-button color="danger" (click)="eliminar(usuarios.rut)">Eliminar</ion-button>
       </ion-list>
   </ion-card-content>
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { LoadingController } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ValidacionesService } from 'src/app/services/validaciones.service';
 
@@ -14,7 +15,7 @@ export class AdministradorPage implements OnInit {
   edadMin: number = 17;
 
   //Tipos de usuario
-  jerUsuario: any[]=[{
+  jerUsuario: any[] = [{
     t_user:'alumno'
   },
   {
@@ -36,19 +37,29 @@ export class AdministradorPage implements OnInit {
     nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{0,8}')])
   });
 
-  //VAMOS A CREAR UNA VARIABLE PARA OBTENER LA LISTA DE USUARIOS DEL SERVICIO DE USUARIOS:
-  usuarios: any[] = [];
+  //Variable para verificar password
   verificar_password: string;
 
-  constructor(private usuarioService: UsuarioService, private validacionesService: ValidacionesService) {}
+  //Variables para trabajar el storage
+  usuarios: any[] = [];
+  KEY_USUARIOS = 'usuarios';
 
-  ngOnInit() {
-    this.usuarios = this.usuarioService.obtenerUsuarios();
+  constructor(private usuarioService: UsuarioService, private validacionesService: ValidacionesService, private loadingController: LoadingController) {}
+
+  async ngOnInit() {
+    await this.cargarDatos();
+  }
+
+  //Métodos para poder usar storage
+  async cargarDatos(){
+    this.usuarios = await this.usuarioService.obtenerUsuarios(this.KEY_USUARIOS);
   }
 
   //método del formulario
-  registrar(){
+  async registrar(){
 
+    this.usuario.value.rut = '';
+    
     //Verificar password
     if (this.usuario.controls.password.value != this.verificar_password) {
       alert('Contraseñas no coinciden!');
@@ -66,37 +77,50 @@ export class AdministradorPage implements OnInit {
       alert('Edad mínima 17 años.');
       return
     }
-    
-    var registrado: boolean = this.usuarioService.agregarUsuario(this.usuario.value);
-    if (!registrado) {
-      alert('Usuario ya existe!');
-      return;
-    }
 
+    //verificar registro
+    var resp = await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.usuarios);
+    if(resp){
+      alert('Registrado')
+      await this.cargarDatos();
+    }
     alert('Usuario registrado!');
     this.usuario.reset();
     this.verificar_password = '';
   }
 
-  eliminar(rutEliminar){
-    this.usuarioService.eliminarUsuario(rutEliminar);
+  async eliminar(rut){
+    await this.usuarioService.eliminarUsuario(this.KEY_USUARIOS, rut);
+    await this.cargandoPantalla('Eliminando...')
+    await this.cargarDatos();
   }
 
-  buscar(rutBuscar){
-    var alumnoEncontrado = this.usuarioService.obtenerUsuario(rutBuscar);
-    this.usuario.setValue(alumnoEncontrado);
-    this.verificar_password = alumnoEncontrado.password;
+  async buscar(rut){
+    this.usuarios = await this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, rut);
+    /*this.usuarios.setValue(alumnoEncontrado);
+    this.verificar_password = alumnoEncontrado.password;*/
   }
 
-  modificar(){
-    //console.log(this.alumno.value);
-    this.usuarioService.modificarUsuario(this.usuario.value);
-    this.limpiar();
+  async modificar(){
+    await this.usuarioService.modificarUsuario(this.KEY_USUARIOS, this.usuarios);
+    //this.limpiar();
+    await this.cargarDatos();
   }
 
-  limpiar(){
-    this.usuario.reset();
+  /* limpiar(){
+    this.usuarios.reset();
     this.verificar_password = '';
+  } */
+
+  //Método para mostrar "cargando pantalla"
+  async cargandoPantalla(message){
+    const cargando = await this.loadingController.create({
+      message,
+      duration: 3000,
+      spinner: 'lines-small'
+    });
+
+    cargando.present();
   }
 
 }
