@@ -42,10 +42,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/registrar/registrar.module').then( m => m.RegistrarPageModule)
   },
   {
-    path: 'geo',
-    loadChildren: () => import('./pages/geo/geo.module').then( m => m.GeoPageModule)
-  },
-  {
     path: '**',
     loadChildren: () => import('./pages/error404/error404.module').then( m => m.Error404PageModule)
   },
