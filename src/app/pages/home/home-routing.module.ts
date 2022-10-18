@@ -8,8 +8,8 @@ const routes: Routes = [
     component: HomePage,
     children:[
       {
-      path: 'alumno',
-      loadChildren: () => import('../alumno/alumno.module').then( m => m.AlumnoPageModule)
+        path: 'alumno',
+        loadChildren: () => import('../alumno/alumno.module').then( m => m.AlumnoPageModule)
       },
       {
         path: 'profesor',

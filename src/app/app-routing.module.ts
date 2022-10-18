@@ -14,24 +14,12 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'administrador',
-    loadChildren: () => import('./pages/administrador/administrador.module').then( m => m.AdministradorPageModule)
-  },
-  {
-    path: 'alumno',
-    loadChildren: () => import('./pages/alumno/alumno.module').then( m => m.AlumnoPageModule)
-  },
-  {
     path: 'inicio',
     loadChildren: () => import('./pages/inicio/inicio.module').then( m => m.InicioPageModule)
   },
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
-  },
-  {
-    path: 'profesor',
-    loadChildren: () => import('./pages/profesor/profesor.module').then( m => m.ProfesorPageModule)
   },
   {
     path: 'recuperar-pass',

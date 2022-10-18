@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { Storage } from '@ionic/storage-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -42,36 +43,64 @@ export class UsuarioService {
   //Variable que confirma si existe o no una sesión activa
   isAutenticated= new BehaviorSubject(false);
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private storage: Storage) {
+    storage.create();
+  }
 
-  //métodos del CRUD:
-  agregarUsuario(usuario): boolean{
-    if ( this.obtenerUsuario(usuario.rut) == undefined ) {
+  //métodos del CRUD (actualizado con storage, 17/10/22):
+  async agregarUsuario(usuario, key){
+    this.usuarios = await this.storage.get(key) || [];
+
+    var datoFind = await this.obtenerUsuario(key, usuario.rut);
+    if(datoFind == undefined){
       this.usuarios.push(usuario);
+      await this.storage.set(key, this.usuarios);
       return true;
     }
     return false;
   }
-  eliminarUsuario(rut){
-    this.usuarios.forEach((usu, index) => {
-      if (usu.rut == rut) {
-        this.usuarios.splice(index, 1);
-      }
-    });
-  }
-  modificarUsuario(usuario){
-    var index = this.usuarios.findIndex(usu => usu.rut == usuario.rut);
-    this.usuarios[index] = usuario;
-  }
-  obtenerUsuario(rut){
+
+  async obtenerUsuario(rut, key){
+    this.usuarios = await this.storage.get(key) || [];
     return this.usuarios.find(usuario => usuario.rut == rut);
   }
-  obtenerUsuarios(){
+
+  async obtenerUsuarios(key){
+    this.usuarios = await this.storage.get(key) || [];
     return this.usuarios;
+
+    /* this.storage.get(key).then(       -----otra forma, pero da errores al ser async---
+      datosStorage => {
+        if(datosStorage.edad > 17){
+          this.datos.push(datosStorage)
+        }
+      }
+    ) */
   }
 
-  //MÉTODOS CUSTOMER:
+  async eliminarUsuario(rut, key){
+    this.usuarios = await this.storage.get(key) || [];
 
+    this.usuarios.forEach((value, index) => {
+      if(value.rut == rut){
+        this.usuarios.splice(index, 1);
+      }  
+    });
+
+    await this.storage.set(key, this.usuarios);
+  }
+
+  async modificarUsuario(usuario, key){
+    this.usuarios = await this.storage.get(key) || [];
+    
+    var index = this.usuarios.findIndex(value => value.rut == usuario.rut);
+    this.usuarios[index] = usuario;
+
+    await this.storage.set(key, this.usuarios);
+  }
+
+
+  //MÉTODOS CUSTOMER:
   validarRutPassword(rut, pass){
     return this.usuarios.find(u => u.rut == rut && u.password == pass);
   }
