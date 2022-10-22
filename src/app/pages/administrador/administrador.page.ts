@@ -61,7 +61,7 @@ export class AdministradorPage implements OnInit {
     this.usuario.value.rut = '';
     
     //Verificar password
-    if (this.usuario.controls.password.value != this.verificar_password) {
+    if(this.usuario.controls.password.value != this.verificar_password) {
       alert('Contraseñas no coinciden!');
       return;
     }
@@ -82,7 +82,7 @@ export class AdministradorPage implements OnInit {
     var resp = await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.usuarios);
     if(resp){
       alert('Registrado')
-      await this.cargarDatos();
+      this.cargarDatos();
     }
     alert('Usuario registrado!');
     this.usuario.reset();
@@ -104,7 +104,7 @@ export class AdministradorPage implements OnInit {
   async modificar(){
     await this.usuarioService.modificarUsuario(this.KEY_USUARIOS, this.usuarios);
     //this.limpiar();
-    await this.cargarDatos();
+    this.cargarDatos();
   }
 
   /* limpiar(){

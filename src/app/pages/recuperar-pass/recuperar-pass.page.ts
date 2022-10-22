@@ -9,17 +9,24 @@ import { UsuarioService } from 'src/app/services/usuario.service';
   styleUrls: ['./recuperar-pass.page.scss'],
 })
 export class RecuperarPassPage implements OnInit {
+
+  //Variables para trabajar los datos
   usuarios: any[] = [];
   email: string;
 
+  //Variables para trabajar el storage
+  KEY_USUARIOS = 'usuarios';
+
+
+
   constructor(private toastController: ToastController, private router:Router,private usuarioService: UsuarioService) { }
 
-  ngOnInit() {
-    this.usuarios = this.usuarioService.obtenerUsuarios();
+  async ngOnInit() {
+    this.usuarios = await this.usuarioService.obtenerUsuarios(this.KEY_USUARIOS);
   }
 
-recuperarContra(){
-  var validarEmail = this.usuarioService.validarCorreorpw(this.email)
+async recuperarContra(){
+  var validarEmail = await this.usuarioService.validarCorreorpw(this.email)
     if (validarEmail != undefined) {
       if (validarEmail.email == this.email) {
         alert('Se envió un correo electrónico de recuperación');

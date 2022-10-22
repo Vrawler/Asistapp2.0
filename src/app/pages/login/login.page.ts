@@ -11,6 +11,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginPage implements OnInit {
 
+  //Variables para trabajar el storage
+  usuarios: any[] = [];
+  KEY_USUARIOS = 'usuarios';
+
   //Cambio en las variables para el nuevo método:
   usuario = new FormGroup({
     email: new FormControl('',[Validators.required,Validators.pattern('[A-Za-z]{1,4}.[A-Za-z]{1,20}@duocuc.cl|[A-Za-z]{1,4}.[A-Za-z]{1,20}@duoc.cl|[A-Za-z]{1,4}.[A-Za-z]{1,20}@profesor.duoc.cl')]),
@@ -19,17 +23,23 @@ export class LoginPage implements OnInit {
 
   constructor(private toastController: ToastController, private router: Router, private usuarioService: UsuarioService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.cargarDatos();
+  }
+
+  //Métodos para poder usar storage
+  async cargarDatos(){
+    this.usuarios = await this.usuarioService.obtenerUsuarios(this.KEY_USUARIOS);
   }
 
   //método para ingresar a home, adaptado:
-  login(){
+  async login(){
     //Obtener valores en variables por separado
     var validarCorreo = this.usuario.controls.email.value;
     var validarPassw = this.usuario.controls.password.value;
 
     //Con el método loginUsuario del usuario.service, rescatamos al usuario
-    var usuarioLogin = this.usuarioService.loginUsuario(validarCorreo, validarPassw);
+    var usuarioLogin = await this.usuarioService.loginUsuario(validarCorreo, validarPassw);
 
     //Verificamos si existe el usuario
     if (usuarioLogin != undefined) {

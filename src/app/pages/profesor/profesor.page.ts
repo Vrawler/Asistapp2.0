@@ -14,6 +14,9 @@ export class ProfesorPage implements OnInit {
   rut: string;
   usuario: any;
 
+  //Variables para trabajar el storage
+  KEY_USUARIOS = 'usuarios';
+
   //Variables para el cod. qr
   elementType = 'canvas';
   value = '';
@@ -22,7 +25,7 @@ export class ProfesorPage implements OnInit {
 
   ngOnInit() {
     this.rut = this.activatedRoute.snapshot.paramMap.get('rut');
-    this.usuario = this.usuarioService.obtenerUsuario(this.rut);
+    this.usuario = this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, this.rut);
     console.table(this.usuario)
   }
 

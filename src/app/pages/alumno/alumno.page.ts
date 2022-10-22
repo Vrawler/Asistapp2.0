@@ -12,11 +12,14 @@ export class AlumnoPage implements OnInit {
   rut: string;
   usuario: any;
 
+  //Variable para trabajar el storage
+  KEY_USUARIOS = 'usuarios';
+
   constructor(private activatedRoute: ActivatedRoute, private usuarioService: UsuarioService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.rut = this.activatedRoute.snapshot.paramMap.get('rut');
-    this.usuario = this.usuarioService.obtenerUsuario(this.rut);
+    this.usuario = await this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, this.rut);
     console.table(this.usuario)
   }
 
