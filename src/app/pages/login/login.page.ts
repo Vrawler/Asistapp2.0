@@ -11,8 +11,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginPage implements OnInit {
 
+  //Usuarios de prueba
+  userAdmin: any;
+  userProf: any;
+  userAlumno: any;
+
   //Variables para trabajar el storage
-  usuarios: any[] = [];
+  usuarios: any [] = [];
   KEY_USUARIOS = 'usuarios';
 
   //Cambio en las variables para el nuevo método:
@@ -21,10 +26,46 @@ export class LoginPage implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(18)]),
   });
 
-  constructor(private toastController: ToastController, private router: Router, private usuarioService: UsuarioService) { }
+  constructor(private toastController: ToastController, private router: Router, private usuarioService: UsuarioService, ) { }
 
   async ngOnInit() {
+
     await this.cargarDatos();
+
+    this.userAdmin = {
+      rut: '1.111.111-1',
+      nom_com: 'Mitsuoyoshi Anzai',
+      email:'mit.anzai@duoc.cl',
+      fec_nac: '1950-08-03',
+      semestre: 'No aplica',
+      password: 'blanco',
+      tipo_usuario: 'administrador',
+      nro_cel: 987981512
+    };
+    this.userProf = {
+      rut: '10.123.456-7',
+      nom_com: 'Rick Sánchez',
+      email:'ri.sanch@profesor.duoc.cl',
+      fec_nac: '1975-07-19',
+      semestre: 'No aplica',
+      password: 'szechuan',
+      tipo_usuario: 'profesor',
+      nro_cel: 9692123123
+    };
+    this.userAlumno = {
+      rut: '90.563.153-k',
+      nom_com: 'Marty McFly',
+      email:'mar.mcfly@duocuc.cl',
+      fec_nac: '2022-01-27',
+      semestre: '1',
+      password: 'delorean',
+      tipo_usuario: 'alumno',
+      nro_cel: 935678419
+    };
+    
+    await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.userAdmin);
+    await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.userProf);
+    await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.userAlumno);
   }
 
   //Métodos para poder usar storage
@@ -34,12 +75,14 @@ export class LoginPage implements OnInit {
 
   //método para ingresar a home, adaptado:
   async login(){
+
     //Obtener valores en variables por separado
     var validarCorreo = this.usuario.controls.email.value;
     var validarPassw = this.usuario.controls.password.value;
+    var usuarioLogin: any;
 
     //Con el método loginUsuario del usuario.service, rescatamos al usuario
-    var usuarioLogin = await this.usuarioService.loginUsuario(validarCorreo, validarPassw);
+    usuarioLogin = await this.usuarioService.loginUsuario(this.KEY_USUARIOS, validarCorreo, validarPassw);
 
     //Verificamos si existe el usuario
     if (usuarioLogin != undefined) {

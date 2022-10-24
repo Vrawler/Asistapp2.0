@@ -14,13 +14,13 @@ export class RegistrarPage implements OnInit {
   //VAMOS A CREAR EL GRUPO DEL FORMULARIO:
   usuario = new FormGroup({
     rut : new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,2}.[0-9]{3}.[0-9]{3}-[0-9kK]{1}')]),
-    nom_completo: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    nom_com: new FormControl('', [Validators.required, Validators.minLength(3)]),
     email: new FormControl('',[Validators.required,Validators.pattern('[A-Za-z]{1,4}.[A-Za-z]{1,20}@duocuc.cl|[A-Za-z]{1,4}.[A-Za-z]{1,20}@duoc.cl|[A-Za-z]{1,4}.[A-Za-z]{1,20}@profesor.duoc.cl')]),
-    fecha_nac: new FormControl('', Validators.required),
+    fec_nac: new FormControl('', Validators.required),
     semestre: new FormControl('', [Validators.required, Validators.min(1), Validators.max(8)]),
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(18)]),
     tipo_usuario: new FormControl('alumno'),
-    nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{0,8}')])
+    nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{0,9}')])
   });
 
   //Variable para verificar pass
@@ -51,7 +51,7 @@ export class RegistrarPage implements OnInit {
     }
 
     //Verificar edad
-    if(!this.validacionesService.calcEdadReturn(17, this.usuario.controls.fecha_nac.value)){
+    if(!this.validacionesService.calcEdadReturn(17, this.usuario.controls.fec_nac.value)){
       alert('Edad mínima 17 años.');
       return;
     }

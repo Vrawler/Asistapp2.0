@@ -11,9 +11,6 @@ import { ValidacionesService } from 'src/app/services/validaciones.service';
 })
 export class AdministradorPage implements OnInit {
 
-  //Variable cálculo de edad
-  edadMin: number = 17;
-
   //Tipos de usuario
   jerUsuario: any[] = [{
     t_user:'alumno'
@@ -34,7 +31,7 @@ export class AdministradorPage implements OnInit {
     semestre: new FormControl('', [Validators.required, Validators.min(1), Validators.max(8)]),
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(18)]),
     tipo_usuario: new FormControl('this.jerUsuario'),
-    nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{0,8}')])
+    nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{0,9}')])
   });
 
   //Variable para verificar password
@@ -57,8 +54,6 @@ export class AdministradorPage implements OnInit {
 
   //método del formulario
   async registrar(){
-
-    this.usuario.value.rut = '';
     
     //Verificar password
     if(this.usuario.controls.password.value != this.verificar_password) {
@@ -79,9 +74,8 @@ export class AdministradorPage implements OnInit {
     }
 
     //verificar registro
-    var resp = await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.usuarios);
+    var resp = await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.usuario.value);
     if(resp){
-      alert('Registrado')
       this.cargarDatos();
     }
     alert('Usuario registrado!');
@@ -96,21 +90,19 @@ export class AdministradorPage implements OnInit {
   }
 
   async buscar(rut){
-    this.usuarios = await this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, rut);
-    /*this.usuarios.setValue(alumnoEncontrado);
-    this.verificar_password = alumnoEncontrado.password;*/
+    var buscarUsu = await this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, rut);
+    this.usuario.setValue(buscarUsu);
   }
 
   async modificar(){
-    await this.usuarioService.modificarUsuario(this.KEY_USUARIOS, this.usuarios);
-    //this.limpiar();
-    this.cargarDatos();
+    this.usuarioService.modificarUsuario(this.KEY_USUARIOS, this.usuarios);
+    await this.cargarDatos();
   }
 
-  /* limpiar(){
-    this.usuarios.reset();
+  limpiar(){
+    this.usuario.reset();
     this.verificar_password = '';
-  } */
+  }
 
   //Método para mostrar "cargando pantalla"
   async cargandoPantalla(message){

@@ -8,37 +8,10 @@ import { Storage } from '@ionic/storage-angular';
 })
 export class UsuarioService {
 
-  //Usuarios predeterminados para el C.R.U.D
+  //Json usuarios y crud
   
-  usuarios: any[] = [
-    {
-      rut: '1.111.111-1',
-      nom_com: 'Mitsuoyoshi Anzai',
-      email:'mit.anzai@duoc.cl',
-      fec_nac: '1950-08-03',
-      semestre: 'No aplica',
-      password: 'blanco',
-      tipo_usuario: 'administrador'
-    },
-    {
-      rut: '10.123.456-7',
-      nom_com: 'Rick Sánchez',
-      email:'ri.sanch@profesor.duoc.cl',
-      fec_nac: '1975-07-19',
-      semestre: 'No aplica',
-      password: 'szechuan',
-      tipo_usuario: 'profesor'
-    },
-    {
-      rut: '90.563.153-k',
-      nom_com: 'Marty McFly',
-      email:'mar.mcfly@duocuc.cl',
-      fec_nac: '2022-01-27',
-      semestre: '1',
-      password: 'delorean',
-      tipo_usuario: 'alumno'
-    }
-  ];
+  usuarios: any[] = [];
+  usuario: any;
 
   //Variable que confirma si existe o no una sesión activa
   isAutenticated= new BehaviorSubject(false);
@@ -48,7 +21,7 @@ export class UsuarioService {
   }
 
   //métodos del CRUD (actualizado con storage, 17/10/22):
-  async agregarUsuario(usuario, key){
+  async agregarUsuario(key, usuario){
     this.usuarios = await this.storage.get(key) || [];
 
     var datoFind = await this.obtenerUsuario(key, usuario.rut);
@@ -60,9 +33,10 @@ export class UsuarioService {
     return false;
   }
 
-  async obtenerUsuario(rut, key){
+  async obtenerUsuario(key, rut){
     this.usuarios = await this.storage.get(key) || [];
-    return this.usuarios.find(usuario => usuario.rut == rut);
+    this.usuario = await this.usuarios.find(usuario => usuario.rut == rut);
+    return this.usuario;
   }
 
   async obtenerUsuarios(key){
@@ -78,7 +52,7 @@ export class UsuarioService {
     ) */
   }
 
-  async eliminarUsuario(rut, key){
+  async eliminarUsuario(key, rut){
     this.usuarios = await this.storage.get(key) || [];
 
     this.usuarios.forEach((value, index) => {
@@ -90,13 +64,13 @@ export class UsuarioService {
     await this.storage.set(key, this.usuarios);
   }
 
-  async modificarUsuario(usuario, key){
+  async modificarUsuario(key, usuario){
     this.usuarios = await this.storage.get(key) || [];
     
     var index = this.usuarios.findIndex(value => value.rut == usuario.rut);
     this.usuarios[index] = usuario;
 
-    await this.storage.set(key, this.usuarios);
+    await this.storage.set(key, this.usuario);
   }
 
 
@@ -110,7 +84,8 @@ export class UsuarioService {
   }
 
   //Métodos customer para login, logout y revisar si está conectado
-  loginUsuario(email, password){
+  async loginUsuario(key, email, password){
+    this.usuarios = await this.storage.get(key) || [];
     var usuarioLogin = this.usuarios.find(usu => usu.email == email && usu.password == password);
     if(usuarioLogin != undefined){
       this.isAutenticated.next(true);
