@@ -2,7 +2,6 @@
 <ion-content>
   <ion-card-header>
     <ion-card-title>Registrar Usuario</ion-card-title>
-    
   </ion-card-header>
 
   <ion-card-content>
@@ -50,8 +49,7 @@
 
       <ion-item>
         <ion-label position="stacked">Repita Contraseña</ion-label>
-        <ion-input type="password" placeholder="Ingrese nuevamente contraseña" [(ngModel)]="verificar_password"
-          [ngModelOptions]="{standalone: 'true'}"></ion-input>
+        <ion-input type="password" placeholder="Ingrese nuevamente contraseña" [(ngModel)]="verificar_password" [ngModelOptions]="{standalone: 'true'}"></ion-input>
       </ion-item>
 
       <ion-button type="submit" [disabled]="!usuario.valid">Registrar</ion-button>

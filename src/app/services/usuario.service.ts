@@ -13,6 +13,10 @@ export class UsuarioService {
   usuarios: any[] = [];
   usuario: any;
 
+  //Json clases y crud
+  asignaturas: any[] = [];
+  asig: any;
+
   //Variable que confirma si existe o no una sesión activa
   isAutenticated= new BehaviorSubject(false);
 
@@ -20,7 +24,7 @@ export class UsuarioService {
     storage.create();
   }
 
-  //métodos del CRUD (actualizado con storage, 17/10/22):
+  //métodos del CRUD de usuario (actualizado con storage, 17/10/22):
   async agregarUsuario(key, usuario){
     this.usuarios = await this.storage.get(key) || [];
 
@@ -98,8 +102,24 @@ export class UsuarioService {
     return this.isAutenticated.value;
   }
 
+  //Método cerrar sesión
   logOut(){
     this.isAutenticated.next(false);
     this.router.navigate(['/login'])
+  }
+
+  //Método CRUD de las asignaturas
+
+  //Obtener una asignatura
+  async obtenerAsignatura(key, cod_asig){
+    this.asignaturas = await this.storage.get(key) || [];
+    this.asig = await this.asignaturas.find(asig => asig.cod_asig == cod_asig);
+    return this.asig;
+  }
+
+  //Obtener todas las asignaturas
+  async obtenerAsignaturas(key){
+    this.asignaturas = await this.storage.get(key);
+    return this.asignaturas;
   }
 }

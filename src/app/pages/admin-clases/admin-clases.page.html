@@ -4,6 +4,45 @@
   </ion-card-header>
 
   <ion-card-content>
+    <form [formGroup]="asig" (ngSubmit)="registrarAsignatura()">  
+      <ion-item>
+        <ion-label position="stacked">Código asignatura</ion-label>
+        <ion-input type="text" placeholder="Asignar código" formControlName="cod_asig"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Nombre asigantura</ion-label>
+        <ion-input type="text" placeholder="Ingrese nombre de la asignatura" formControlName="nom_asig"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Sigla asignatura</ion-label>
+        <ion-input type="text" placeholder="Ingrese la sigla de la asignatura" formControlName="sigla_asig"></ion-input>
+      </ion-item>
     
+      <ion-item>
+        <ion-label position="stacked">Profesor asignatura</ion-label>
+        <ion-input type="date" placeholder="Seleccione profesor" formControlName="prof_asignatura" ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-select placeholder="escuela" formControlName="clasif_esc">
+          <ion-select-option *ngFor="let esc of escuela">{{escuela.escDuoc}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button type="submit" [disabled]="!asig.valid">Registrar asignatura</ion-button>
+      <ion-button (click)="modificar()">Modificar</ion-button>
+      <ion-button (click)="limpiar()">Limpiar</ion-button>
+    </form>
+  </ion-card-content>
+
+  <ion-card-content> 
+    <h1>Lista de asignaturas</h1>
+        <ion-list class="lista" *ngFor="let as of asignaturas">
+        <p>{{as.cod_asig}} - {{as.nom_asig}} - {{as.sigla_asig}} - {{as.prof_asignatura}} - {{as.clasif_esc}}</p>
+        <ion-button color="warning" (click)="buscar(as.cod_asig)">Buscar</ion-button>
+        <ion-button color="danger" (click)="eliminar(as.cod_asig)">Eliminar</ion-button>
+      </ion-list>
   </ion-card-content>
 </ion-content>
