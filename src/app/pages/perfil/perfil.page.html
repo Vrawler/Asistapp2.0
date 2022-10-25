@@ -1,22 +1,26 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>perfil</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content >
-  <ion-list > 
-    <ion-label>Rut : {{usuario.rut}} <p></p> </ion-label> 
 
-    <ion-label>Nombre: {{usuario.nom_com}} <p></p> </ion-label>
+  <div class="fondo">
 
-    <ion-label>Correo institucional : {{usuario.email}} <p></p> </ion-label>
+  <ion-card>
 
-    <ion-label>Fecha de nacimiento : {{usuario.fec_nac}}<p></p> </ion-label>
-
-    <ion-label>Semestre : {{usuario.semestre}} <p></p></ion-label>
-
-    <ion-label>Tipo de usuario : {{usuario.tipo_usuario}} <p></p> </ion-label>
-  </ion-list>
-
+    <img src="../../../assets/img/oerfil.png" alt="imagen_login" class="imagen_login"/>
+    <ion-card-header>
+       <ion-card-title>Informacion de la cuenta</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-card-header>
+          <ion-card-subtitle>Nombre: {{usuario.nom_com}} </ion-card-subtitle>
+          <ion-card-subtitle>Rut : {{usuario.rut}} </ion-card-subtitle>
+          <ion-card-subtitle>Correo institucional : {{usuario.email}} </ion-card-subtitle>
+          <ion-card-subtitle>Fecha de nacimiento : {{usuario.fec_nac}} </ion-card-subtitle>
+          <ion-card-subtitle>Semestre : {{usuario.semestre}} </ion-card-subtitle>
+          <ion-card-subtitle>Tipo de usuario : {{usuario.tipo_usuario}} </ion-card-subtitle>
+          <ion-card-subtitle>Tipo de usuario : {{usuario.nro_cel}} </ion-card-subtitle> 
+        </ion-card-header>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</div>
 </ion-content>

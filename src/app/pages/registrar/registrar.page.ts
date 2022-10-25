@@ -61,4 +61,9 @@ export class RegistrarPage implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  //Función para botón
+  btnInicio = function(){
+    this.router.navigate(['/inicio']);
+  }
+
 }

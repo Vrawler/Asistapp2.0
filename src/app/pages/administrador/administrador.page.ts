@@ -83,22 +83,26 @@ export class AdministradorPage implements OnInit {
     this.verificar_password = '';
   }
 
+  //Método eliminar
   async eliminar(rut){
     await this.usuarioService.eliminarUsuario(this.KEY_USUARIOS, rut);
     await this.cargandoPantalla('Eliminando...')
     await this.cargarDatos();
   }
 
+  //Método para traer un usuario
   async buscar(rut){
     var buscarUsu = await this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, rut);
     this.usuario.setValue(buscarUsu);
   }
 
+  //Método para modificar usuario
   async modificar(){
     this.usuarioService.modificarUsuario(this.KEY_USUARIOS, this.usuarios);
     await this.cargarDatos();
   }
 
+  //Método para limpiar campos
   limpiar(){
     this.usuario.reset();
     this.verificar_password = '';

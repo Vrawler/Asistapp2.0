@@ -12,9 +12,12 @@
 
       <ngx-qrcode [elementType]="elementType" [value]="value"></ngx-qrcode>
       <ion-card-title>Haz click en el botón para generar QR</ion-card-title>
+      <ion-input placeholder=" " color="color" [(ngModel)]="value" disabled="true"></ion-input>
+
       <ion-button color="primary"  size="small" class="boton" (click)="generarQR()">
         Código QR
       </ion-button>
+
 
     </ion-card>
   </div>

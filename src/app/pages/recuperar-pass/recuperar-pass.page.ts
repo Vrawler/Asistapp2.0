@@ -43,4 +43,9 @@ async recuperarContra(){
     });
     toast.present();
   }
+
+  //Función para botón
+  btnInicio = function(){
+    this.router.navigate(['/inicio']);
+  }
 }

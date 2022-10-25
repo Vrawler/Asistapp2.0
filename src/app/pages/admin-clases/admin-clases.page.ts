@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { LoadingController } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
@@ -8,6 +9,9 @@ import { UsuarioService } from 'src/app/services/usuario.service';
   styleUrls: ['./admin-clases.page.scss'],
 })
 export class AdminClasesPage implements OnInit {
+
+  //Asignatura predefinida
+  asigPredef: any;
 
   //Tipos de asignatura
   escuela: any[] = [{
@@ -37,6 +41,9 @@ export class AdminClasesPage implements OnInit {
   {
     escDuoc:'Turismo y hotelería'
   },
+  {
+    escDuoc:'Formación cristiana'
+  },
   ];
   
   //CRUD para crear una asignatura
@@ -49,21 +56,86 @@ export class AdminClasesPage implements OnInit {
     clasif_esc: new FormControl('this.escuela')
   });
 
-  asignaturas: any[] =[];
+  asignaturas: any[] = [];
   KEY_ASIGNATURAS = 'asignaturas';
+  usuarios: any[] = [];
+  KEY_USUARIOS = 'usuarios';
 
-  constructor(private usuarioService: UsuarioService) { }
+  //Variables validaciones
+  valid_cod: string;
+  
+
+  constructor(private usuarioService: UsuarioService, private loadingController: LoadingController) { }
 
   async ngOnInit() {
     await this.cargarAsignaturas();
+    await this.asignarProfesor();
+
+    this.asigPredef = {
+      cod_asig: '15483569',
+      nom_asig: 'Programación de algoritmos cuánticos',
+      sigla_asig: 'PGY5050',
+      prof_asignatura: 'Rick Sánchez',
+      clasif_esc: 'Informática y telecomunicaciones'
+    };
+
+    await this.usuarioService.agregarAsignatura(this.KEY_ASIGNATURAS, this.asigPredef);
   }
 
+  //Método para poder usar storage
   async cargarAsignaturas(){
     this.asignaturas = await this.usuarioService.obtenerAsignaturas(this.KEY_ASIGNATURAS);
   }
 
-  async registrarAsignatura(){
+  //Método para traer ususarios de tipo profesor
+  async asignarProfesor(){
+    this.usuarios = await this.usuarioService.obtenerProfesores(this.KEY_USUARIOS);
+  }
 
+  //Método registrar asignatura
+  async registrarAsignatura(){
+    //verificar registro
+    var resp = await this.usuarioService.agregarAsignatura(this.KEY_ASIGNATURAS, this.asig.value);
+    if(resp){
+      this.cargarAsignaturas();
+    }
+    alert('Asignatura registrada.');
+    this.asig.reset();
+  }
+
+  //Método eliminar asignatura
+  async eliminarAsignatura(cod_asig){
+    await this.usuarioService.eliminarAsig(this.KEY_ASIGNATURAS, cod_asig);
+    await this.cargandoPantalla('Eliminando...')
+    await this.cargarAsignaturas();
+  }
+
+  //Método para buscar una asignatura
+  async buscarAsignatura(cod_asig){
+    var buscarAsig = await this.usuarioService.obtenerAsignatura(this.KEY_ASIGNATURAS, cod_asig);
+    this.asig.setValue(buscarAsig);
+  }
+
+  //Método para modificar asignatura
+  async modificarAsig(){
+    this.usuarioService.modificarAsignatura(this.KEY_ASIGNATURAS, this.asignaturas);
+    await this.cargarAsignaturas();
+  }
+
+  //Método para limpiar campos
+  limpiarAsig(){
+    this.asig.reset();
+  }
+
+  //Método para mostrar "cargando pantalla"
+  async cargandoPantalla(message){
+    const cargando = await this.loadingController.create({
+      message,
+      duration: 3000,
+      spinner: 'lines-small'
+    });
+
+    cargando.present();
   }
 
 }

@@ -21,13 +21,14 @@
       </ion-item>
     
       <ion-item>
-        <ion-label position="stacked">Profesor asignatura</ion-label>
-        <ion-input type="date" placeholder="Seleccione profesor" formControlName="prof_asignatura" ></ion-input>
+        <ion-select placeholder="Seleccione profesor" formControlName="prof_asignatura">
+          <ion-select-option *ngFor="let e of usuarios">{{e.nom_com}}</ion-select-option>
+        </ion-select>
       </ion-item>
 
       <ion-item>
-        <ion-select placeholder="escuela" formControlName="clasif_esc">
-          <ion-select-option *ngFor="let esc of escuela">{{escuela.escDuoc}}</ion-select-option>
+        <ion-select placeholder="Escuela" formControlName="clasif_esc">
+          <ion-select-option *ngFor="let esc of escuela">{{esc.escDuoc}}</ion-select-option>
         </ion-select>
       </ion-item>
 
@@ -39,10 +40,22 @@
 
   <ion-card-content> 
     <h1>Lista de asignaturas</h1>
-        <ion-list class="lista" *ngFor="let as of asignaturas">
-        <p>{{as.cod_asig}} - {{as.nom_asig}} - {{as.sigla_asig}} - {{as.prof_asignatura}} - {{as.clasif_esc}}</p>
-        <ion-button color="warning" (click)="buscar(as.cod_asig)">Buscar</ion-button>
-        <ion-button color="danger" (click)="eliminar(as.cod_asig)">Eliminar</ion-button>
-      </ion-list>
+
+    <ion-list *ngFor="let asig of asignaturas">
+      <ion-card>
+        <ion-item>
+          <ion-card-header>
+            <ion-card-title>{{asig.nom_asig}}</ion-card-title>
+            <ion-card-subtitle>{{asig.cod_asig}} - {{asig.sigla_asig}} - {{asig.clasif_esc}} </ion-card-subtitle>
+          </ion-card-header>
+          <ion-button slot="end" color="warning" (click)="buscarAsignatura(asig.cod_asig)">Buscar</ion-button>
+          <ion-button slot="end" color="danger" (click)="eliminarAsignatura(asig.cod_asig)">Eliminar</ion-button>
+        </ion-item>
+        <ion-card-content>
+          {{asig.clasif_esc}}
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+  
   </ion-card-content>
 </ion-content>
