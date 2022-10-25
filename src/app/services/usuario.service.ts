@@ -122,4 +122,19 @@ export class UsuarioService {
     this.asignaturas = await this.storage.get(key);
     return this.asignaturas;
   }
+
+  //Método para llamar a un profesor para asignarlo a la clase
+  async obtenerProfesor(key)
+  {
+    this.usuarios = await this.storage.get(key) || [];
+    this.usuario = this.usuarios.find(usu => usu.tipo_usuario == 'profesor');
+    return this.usuario;
+  }
+  
+  async obtenerDocentes(key): Promise<any[]> {
+    this.usuarios = await this.storage.get(key) || [];
+    this.usuarios = await this.usuarios.filter(usu => usu.tipo_usuario == 'profesor');
+    console.log(this.usuarios)
+    return this.usuarios;
+  }
 }

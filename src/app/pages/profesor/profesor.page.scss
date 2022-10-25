@@ -5,7 +5,7 @@ ion-title{
 
 ion-header{
     --background: linear-gradient(#4926c9, #9198e5);
-}   
+}
 
 .fondo-alumno{
     height: 100vh;
@@ -32,6 +32,7 @@ ion-card {
 
 
 
+
     ion-card-header {
         ion-card-subtitle {
             font-size: x-large;
@@ -40,7 +41,8 @@ ion-card {
 
         ion-card-title {
             font-size: x-large;
-           // color: global.$color-primario;
+            font-weight: 200;
+            line-height: 30px;
         }
     }
 
