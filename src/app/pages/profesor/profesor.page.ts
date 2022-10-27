@@ -10,12 +10,25 @@ import { v4  } from 'uuid';
 })
 export class ProfesorPage implements OnInit {
 
-  //Variables que reciben los datos de ingreso
+  //Variables importantes
   rut: string;
-  usuario: any;
+  count: any;
 
-  //Variables para trabajar el storage
-  KEY_USUARIOS = 'usuarios';
+  //Variables para trabajar profesores
+  profesores: any[] = [];
+  prof: any;
+  KEY_PROFESORES = 'profesor';
+
+  //Variables para trabajar clases
+  asignaturas: any[] = [];
+  asig: any;
+  KEY_ASIGNATURAS: 'asistencias'
+
+  //Variables para trabajar asistencia
+
+  asistencias: any[] = [];
+  asist: any;
+  KEY_ASISTENCIAS = 'asistencias';
 
   //Variables para el cod. qr
   elementType = 'canvas';
@@ -25,14 +38,39 @@ export class ProfesorPage implements OnInit {
 
   ngOnInit() {
     this.rut = this.activatedRoute.snapshot.paramMap.get('rut');
-    this.usuario = this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, this.rut);
-    console.table(this.usuario)
+    this.cargarProfesores();
+    this.cargarAsigProf();
   }
 
-  generarQR(){
-    if(this.value == ''){
-      this.value = v4();
+  //Métodos para ngOnInit
+
+  async cargarProfesores(){
+    this.profesores = await this.usuarioService.obtenerProfesores(this.KEY_PROFESORES);
+  }
+
+  async cargarAsigProf(){
+    this.asignaturas = await this.usuarioService.asignaturaProf(this.KEY_ASIGNATURAS, this.rut);
+  }
+
+  //Código QR
+  async generarQR(cod_asig){
+    this.count = await this.usuarioService.idAsig(this.KEY_ASISTENCIAS);
+    this.asist = {
+      codAsist: this.count,
+      cod_asig: cod_asig,
+      alumnos: []
+    }
+
+    var resp: boolean = await this.usuarioService.agregarAsist(this.KEY_ASISTENCIAS, this.asist);
+    if(resp){
+      alert('Escanear código.')
+      await this.cargarAsigProf();
+      await this.cargarProfesores();
+      if(this.value == ''){
+        this.value = JSON.stringify(this.count);
+      }
+    }else{
+      alert('Asistencia del día creada.')
     }
   }
-
 }

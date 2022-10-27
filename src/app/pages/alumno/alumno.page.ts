@@ -17,7 +17,7 @@ export class AlumnoPage implements OnInit {
   KEY_ASIGNATURAS: 'asignaturas';
 
   asistencias:any[]=[];
-  asistencia:any;
+  asist:any;
   KEY_ASISTENCIAS = 'asistencias'
 
   codigoQr: any;
@@ -31,8 +31,8 @@ export class AlumnoPage implements OnInit {
   async ngOnInit() {
     this.rut = this.activatedRoute.snapshot.paramMap.get('rut');
     this.usuario = await this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, this.rut);
-    console.table(this.usuario)
     await this.cargarAsignaturas();
+    await this.cargarAsistencias();
   }
 
   async cargarAsignaturas(){
@@ -46,6 +46,5 @@ export class AlumnoPage implements OnInit {
   async guardarAsist(){
       await this.usuarioService.guardarAsist(this.KEY_ASISTENCIAS, this.codigoQr,this.rut);
   }
-
 
 }
