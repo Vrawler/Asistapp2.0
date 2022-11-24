@@ -74,19 +74,19 @@ export class LoginPage implements OnInit {
   }
 
   //método para ingresar a home, adaptado:
-  async login(){
+  login(){
 
     //Obtener valores en variables por separado
-    var validarCorreo = this.usuario.controls.email.value;
-    var validarPassw = this.usuario.controls.password.value;
-    var usuarioLogin: any;
+    validarCorreo = this.usuario.controls.email.value;
+    validarPassw = this.usuario.controls.password.value;
+    usuarioLogin: any;
 
     //Con el método loginUsuario del usuario.service, rescatamos al usuario
-    usuarioLogin = await this.usuarioService.loginUsuario(this.KEY_USUARIOS, validarCorreo, validarPassw);
+    usuarioLogin = this.usuarioService.loginUsuario(this.KEY_USUARIOS, validarCorreo, validarPassw);
 
     //Verificamos si existe el usuario
     if (usuarioLogin != undefined) {
-      //Diferencia con el método anterior: antes de redireccionar, preparamos los datos que enviaremos para validar
+      
       var navigationExtras: NavigationExtras = {
         state:{
           usuario: usuarioLogin

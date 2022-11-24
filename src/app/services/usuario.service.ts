@@ -51,14 +51,6 @@ export class UsuarioService {
   async obtenerUsuarios(key){
     this.usuarios = await this.storage.get(key) || [];
     return this.usuarios;
-
-    /* this.storage.get(key).then(       -----otra forma, pero da errores al ser async---
-      datosStorage => {
-        if(datosStorage.edad > 17){
-          this.datos.push(datosStorage)
-        }
-      }
-    ) */
   }
 
   async eliminarUsuario(key, rut){

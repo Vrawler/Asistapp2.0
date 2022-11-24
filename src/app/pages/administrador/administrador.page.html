@@ -26,6 +26,11 @@
       </ion-item>
 
       <ion-item>
+        <ion-label position="stacked">Dirección</ion-label>
+        <ion-input type="text" placeholder="Ingrese dirección de domicilio" formControlName="direccion" [(ngModel)]="fec_nac"></ion-input>
+      </ion-item>
+
+      <ion-item>
         <ion-label position="stacked">Semestre</ion-label>
         <ion-input type="text" placeholder="Ingrese semestre" formControlName="semestre"></ion-input>
       </ion-item>
@@ -38,7 +43,7 @@
 
       <ion-item>
         <ion-label position="stacked">Celular</ion-label>
-        <ion-input type="text" placeholder="Ingrese número de celular" formControlName="nro_cel"></ion-input>
+        <ion-input type="tel" placeholder="Ingrese número de celular" formControlName="nro_cel"></ion-input>
       </ion-item>
 
       <ion-item>

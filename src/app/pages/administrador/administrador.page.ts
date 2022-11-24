@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
+import { FirestService } from 'src/app/services/firest.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ValidacionesService } from 'src/app/services/validaciones.service';
 
@@ -28,10 +29,11 @@ export class AdministradorPage implements OnInit {
     nom_com: new FormControl('', [Validators.required, Validators.minLength(3)]),
     email: new FormControl('',[Validators.required,Validators.pattern('[A-Za-z]{1,4}.[A-Za-z]{1,20}@duocuc.cl|[A-Za-z]{1,4}.[A-Za-z]{1,20}@duoc.cl|[A-Za-z]{1,4}.[A-Za-z]{1,20}@profesor.duoc.cl')]),
     fec_nac: new FormControl('', Validators.required),
+    direccion: new FormControl('',[Validators.required]),
     semestre: new FormControl('', [Validators.required, Validators.min(1), Validators.max(8)]),
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(18)]),
     tipo_usuario: new FormControl('this.jerUsuario'),
-    nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{0,9}')])
+    nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{9}')])
   });
 
   //Variable para verificar password
@@ -41,19 +43,33 @@ export class AdministradorPage implements OnInit {
   usuarios: any[] = [];
   KEY_USUARIOS = 'usuarios';
 
-  constructor(private usuarioService: UsuarioService, private validacionesService: ValidacionesService, private loadingController: LoadingController) {}
+  constructor(
+    private usuarioService: UsuarioService,
+    private validacionesService: ValidacionesService,
+    private loadingController: LoadingController,
+    private firest: FirestService) {}
 
-  async ngOnInit() {
-    await this.cargarDatos();
+  ngOnInit() {
+    this.cargarDatos();
   }
 
   //Métodos para poder usar storage
-  async cargarDatos(){
-    this.usuarios = await this.usuarioService.obtenerUsuarios(this.KEY_USUARIOS);
+  cargarDatos(){
+    this.firest.getDatosFire('usuarios').subscribe(
+      datosfb => {
+        this.usuarios = [];
+        for(let usuario of datosfb){
+          console.log(usuario.payload.doc.data());
+          let usu = usuario.payload.doc.data();
+          usu['id'] = usuario.payload.doc.id;
+          this.usuarios.push(usu);
+        }
+      }
+    );
   }
 
   //método del formulario
-  async registrar(){
+  registrar(){
     
     //Verificar password
     if(this.usuario.controls.password.value != this.verificar_password) {
@@ -74,7 +90,7 @@ export class AdministradorPage implements OnInit {
     }
 
     //verificar registro
-    var resp = await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.usuario.value);
+    var resp = this.firest.addFire('usuarios', this.usuario.value);
     if(resp){
       this.cargarDatos();
     }
