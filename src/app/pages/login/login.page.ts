@@ -3,6 +3,7 @@ import { ToastController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FirestService } from 'src/app/services/firest.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,7 @@ export class LoginPage implements OnInit {
 
   //Variables para trabajar el storage
   usuarios: any [] = [];
-  KEY_USUARIOS = 'usuarios';
+  //KEY_USUARIOS = 'usuarios';
 
   //Cambio en las variables para el nuevo método:
   usuario = new FormGroup({
@@ -26,11 +27,11 @@ export class LoginPage implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(18)]),
   });
 
-  constructor(private toastController: ToastController, private router: Router, private usuarioService: UsuarioService, ) { }
+  constructor(private toastController: ToastController, private router: Router, private usuarioService: UsuarioService, private fire: FirestService) { }
 
   async ngOnInit() {
 
-    await this.cargarDatos();
+    this.cargarDatos();
 
     this.userAdmin = {
       rut: '1.111.111-1',
@@ -63,14 +64,24 @@ export class LoginPage implements OnInit {
       nro_cel: 935678419
     };
     
-    await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.userAdmin);
-    await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.userProf);
-    await this.usuarioService.agregarUsuario(this.KEY_USUARIOS, this.userAlumno);
+    this.fire.addFire('usuarios', this.userAdmin.value);
+    this.fire.addFire('usuarios', this.userProf.value);
+    this.fire.addFire('usuarios', this.userAlumno.value);
   }
 
   //Métodos para poder usar storage
-  async cargarDatos(){
-    this.usuarios = await this.usuarioService.obtenerUsuarios(this.KEY_USUARIOS);
+  cargarDatos(){
+    this.fire.getDatosFire('usuarios').subscribe(
+      registro =>{
+        this.usuarios = [];
+        for(let usuario of registro){
+          console.log( usuario.payload.doc.data() );
+          let usu = usuario.payload.doc.data();
+          usu['id'] = usuario.payload.doc.id;
+          this.usuarios.push(usu);
+        }
+      }
+    );
   }
 
   //método para ingresar a home, adaptado:
@@ -94,7 +105,7 @@ export class LoginPage implements OnInit {
       };
 
       //Según el tipo de usuario, se redirige al home respectivo
-      this.router.navigate(['/home'], navigationExtras);
+      this.router.navigate(['/home/perfil/'+usuarioLogin.rut], navigationExtras);
       this.usuario.reset();
 
     }else{
@@ -115,8 +126,5 @@ export class LoginPage implements OnInit {
   btnInicio = function(){
     this.router.navigate(['/inicio']);
   }
-
-
-
 
 }
