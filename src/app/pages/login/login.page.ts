@@ -12,14 +12,8 @@ import { FirestService } from 'src/app/services/firest.service';
 })
 export class LoginPage implements OnInit {
 
-  //Usuarios de prueba
-  userAdmin: any;
-  userProf: any;
-  userAlumno: any;
-
   //Variables para trabajar el storage
   usuarios: any [] = [];
-  //KEY_USUARIOS = 'usuarios';
 
   //Cambio en las variables para el nuevo método:
   usuario = new FormGroup({
@@ -27,46 +21,16 @@ export class LoginPage implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(18)]),
   });
 
-  constructor(private toastController: ToastController, private router: Router, private usuarioService: UsuarioService, private fire: FirestService) { }
+  constructor(
+    private toastController: ToastController,
+    private router: Router,
+    private usuarioService: UsuarioService, 
+    private fire: FirestService) { }
 
-  async ngOnInit() {
+  ngOnInit() {
 
     this.cargarDatos();
 
-    this.userAdmin = {
-      rut: '1.111.111-1',
-      nom_com: 'Mitsuoyoshi Anzai',
-      email:'mit.anzai@duoc.cl',
-      fec_nac: '1950-08-03',
-      semestre: 'No aplica',
-      password: 'blanco',
-      tipo_usuario: 'administrador',
-      nro_cel: 987981512
-    };
-    this.userProf = {
-      rut: '10.123.456-7',
-      nom_com: 'Rick Sánchez',
-      email:'ri.sanch@profesor.duoc.cl',
-      fec_nac: '1975-07-19',
-      semestre: 'No aplica',
-      password: 'szechuan',
-      tipo_usuario: 'profesor',
-      nro_cel: 9692123123
-    };
-    this.userAlumno = {
-      rut: '90.563.153-k',
-      nom_com: 'Marty McFly',
-      email:'mar.mcfly@duocuc.cl',
-      fec_nac: '2022-01-27',
-      semestre: '1',
-      password: 'delorean',
-      tipo_usuario: 'alumno',
-      nro_cel: 935678419
-    };
-    
-    this.fire.addFire('usuarios', this.userAdmin.value);
-    this.fire.addFire('usuarios', this.userProf.value);
-    this.fire.addFire('usuarios', this.userAlumno.value);
   }
 
   //Métodos para poder usar storage
@@ -88,28 +52,27 @@ export class LoginPage implements OnInit {
   login(){
 
     //Obtener valores en variables por separado
-    validarCorreo = this.usuario.controls.email.value;
-    validarPassw = this.usuario.controls.password.value;
-    usuarioLogin: any;
+    var validarCorreo = this.usuario.controls.email.value;
+    var validarPassw = this.usuario.controls.password.value;
 
     //Con el método loginUsuario del usuario.service, rescatamos al usuario
-    usuarioLogin = this.usuarioService.loginUsuario(this.KEY_USUARIOS, validarCorreo, validarPassw);
-
-    //Verificamos si existe el usuario
-    if (usuarioLogin != undefined) {
-      
-      var navigationExtras: NavigationExtras = {
-        state:{
-          usuario: usuarioLogin
-        }
-      };
-
-      //Según el tipo de usuario, se redirige al home respectivo
-      this.router.navigate(['/home/perfil/'+usuarioLogin.rut], navigationExtras);
-      this.usuario.reset();
-
-    }else{
-      this.tostadaError();
+    var usuarioLogin = this.usuarios.find(usu => usu.email == validarCorreo && usu.password == validarPassw);
+    for(let usrs of this.usuarios){
+      if(usrs.email == validarCorreo && usrs.password == validarPassw){
+        let navigationExtras: NavigationExtras = {
+          state:{
+            usuario: usuarioLogin
+          }
+        };
+        //Según el tipo de usuario, se redirige al home respectivo
+        this.router.navigate(['/home/perfil/'+usuarioLogin.rut], navigationExtras);
+        this.usuarioService.isAutenticated.next(true);
+        this.usuario.reset();
+        return true;
+      }else{
+        this.tostadaError();
+        return false;
+      }
     }
   }
 

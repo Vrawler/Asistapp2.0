@@ -33,7 +33,8 @@ export class AdministradorPage implements OnInit {
     semestre: new FormControl('', [Validators.required, Validators.min(1), Validators.max(8)]),
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(18)]),
     tipo_usuario: new FormControl('this.jerUsuario'),
-    nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{9}')])
+    nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{9}')]),
+    id: new FormControl()
   });
 
   //Variable para verificar password
@@ -41,13 +42,14 @@ export class AdministradorPage implements OnInit {
 
   //Variables para trabajar el storage
   usuarios: any[] = [];
-  KEY_USUARIOS = 'usuarios';
+  // KEY_USUARIOS = 'usuarios';
+  updateId: any = '';
 
   constructor(
     private usuarioService: UsuarioService,
     private validacionesService: ValidacionesService,
     private loadingController: LoadingController,
-    private firest: FirestService) {}
+    private firestService: FirestService) {}
 
   ngOnInit() {
     this.cargarDatos();
@@ -55,7 +57,7 @@ export class AdministradorPage implements OnInit {
 
   //Métodos para poder usar storage
   cargarDatos(){
-    this.firest.getDatosFire('usuarios').subscribe(
+    this.firestService.getDatosFire('usuarios').subscribe(
       datosfb => {
         this.usuarios = [];
         for(let usuario of datosfb){
@@ -90,32 +92,38 @@ export class AdministradorPage implements OnInit {
     }
 
     //verificar registro
-    var resp = this.firest.addFire('usuarios', this.usuario.value);
-    if(resp){
-      this.cargarDatos();
-    }
+    this.firestService.addFire('usuarios', this.usuario.value);
+    this.cargarDatos();
     alert('Usuario registrado!');
     this.usuario.reset();
     this.verificar_password = '';
   }
 
   //Método eliminar
-  async eliminar(rut){
-    await this.usuarioService.eliminarUsuario(this.KEY_USUARIOS, rut);
+  async eliminar(id){
+    this.firestService.deleteFire('usuarios', id);
     await this.cargandoPantalla('Eliminando...')
-    await this.cargarDatos();
+    this.cargarDatos();
   }
 
   //Método para traer un usuario
-  async buscar(rut){
-    var buscarUsu = await this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, rut);
-    this.usuario.setValue(buscarUsu);
+  buscar(id){
+    var buscarUsu = this.firestService.getDatoFire('usuarios', id);
+    buscarUsu.subscribe(
+      (resp: any) =>{
+        let usr = resp.data();
+        usr['id'] = resp.id;
+        this.usuario.setValue( usr )
+      }
+    )
   }
 
   //Método para modificar usuario
-  async modificar(){
-    this.usuarioService.modificarUsuario(this.KEY_USUARIOS, this.usuarios);
-    await this.cargarDatos();
+  modificar(){
+    let usr = this.usuario.valid;
+    this.firestService.updateFire('usuarios', this.updateId, usr);
+    this.usuario.reset();
+    this.updateId = '';
   }
 
   //Método para limpiar campos

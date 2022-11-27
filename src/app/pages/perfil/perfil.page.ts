@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FirestService } from 'src/app/services/firest.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
@@ -11,21 +12,19 @@ export class PerfilPage implements OnInit {
 
   //Variables para recibir el dato que se quiere mostrar en la página perfil
   rut: string = '';
-  usuario: any = {};
+  usuario: any;
 
   /*El error que había se producía por no inicializar las variables. 
   Para este caso, si la variable no se declara, como el html carga primero, no sabe que mostrar*/
 
-  //Variable para trabajar el storage
-  KEY_USUARIOS = 'usuarios';
+  constructor(
+    private activatedRoute: ActivatedRoute, 
+    private router:Router
+    ) { }
 
-  constructor(private activatedRoute: ActivatedRoute, private usuarioService: UsuarioService) { }
-
-  async ngOnInit() {
-
+  ngOnInit() {
+    this.usuario = this.router.getCurrentNavigation().extras.state.usuario;
     this.rut = this.activatedRoute.snapshot.paramMap.get('rut');
-    this.usuario = await this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, this.rut);
     console.table(this.usuario);
   }
-
 }
