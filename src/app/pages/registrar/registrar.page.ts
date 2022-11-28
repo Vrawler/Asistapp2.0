@@ -39,23 +39,23 @@ export class RegistrarPage implements OnInit {
 
   //método del formulario
   registrar(){
-    // //Verificar password
-    // if (this.usuario.controls.password.value != this.verificar_password) {
-    //   alert('CONTRASEÑAS NO COINCIDEN!');
-    //   return;
-    // }
+    //Verificar password
+    if (this.usuario.controls.password.value != this.verificar_password) {
+      alert('CONTRASEÑAS NO COINCIDEN!');
+      return;
+    }
 
-    // //Verificar rut
-    // if(!this.validacionesService.validarRut(this.usuario.controls.rut.value)){
-    //   alert('Rut inválido.');
-    //   return;
-    // }
+    //Verificar rut
+    if(!this.validacionesService.validarRut(this.usuario.controls.rut.value)){
+      alert('Rut inválido.');
+      return;
+    }
 
-    // //Verificar edad
-    // if(!this.validacionesService.calcEdadReturn(17, this.usuario.controls.fec_nac.value)){
-    //   alert('Edad mínima 17 años.');
-    //   return;
-    // }
+    //Verificar edad
+    if(!this.validacionesService.calcEdadReturn(17, this.usuario.controls.fec_nac.value)){
+      alert('Edad mínima 17 años.');
+      return;
+    }
 
     this.firestService.addFire('usuarios', this.usuario.value);
     alert('Usuario registrado.');

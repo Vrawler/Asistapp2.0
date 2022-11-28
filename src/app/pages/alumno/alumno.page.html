@@ -1,36 +1,17 @@
-<ion-header>
-  <ion-toolbar color="tertiary">
-    <ion-title>Alumno</ion-title>
-  </ion-toolbar>
-  </ion-header>
   
-  <!---
-  </ion-header>
-  <ion-header>
-    <ion-item>
-      <ion-avatar slot="start">
-        <img alt="icon-alumno" src="../../../assets/img/icon-alumno.jpg" />
-      </ion-avatar>
-      <ion-label>
-      Alumno
-      </ion-label>
-    </ion-item>
-  </ion-header> -->
-  
-  
-  <ion-content>
-    <div  class="fondo-alumno">
-      <ion-card>
-        <img class="icono-alumno" style="height: auto; max-width: 20vh;" src="../../../assets/img/AsistApp.png"/>
-        <img src="../../../assets/img/icono_estudiantes.png" alt="" width="200">
-        <ion-card-content>
-          <ion-item>
-          <ion-label position="stacked">Ingresar Codigo QR:</ion-label>
-          <ion-input [(ngModel)]="Qrcode"TRIM type="text" placeholder="ingrese codigo QR"></ion-input>
-          </ion-item>
-          <ion-button expand="block" (click)="guardarAsist()">Ingresar codigo</ion-button>
-        </ion-card-content>
-  
-      </ion-card>
-    </div>
-  </ion-content>
+<ion-content>
+  <div  class="fondo-alumno">
+    <ion-card>
+      <img class="icono-alumno" style="height: auto; max-width: 20vh;" src="../../../assets/img/AsistApp.png"/>
+      <img src="../../../assets/img/icono_estudiantes.png" alt="" width="200">
+      <ion-card-content>
+        <ion-item>
+        <ion-label position="stacked">Ingresar Codigo QR:</ion-label>
+        <ion-input [(ngModel)]="Qrcode"TRIM type="text" placeholder="ingrese codigo QR"></ion-input>
+        </ion-item>
+        <ion-button expand="block" (click)="guardarAsist()">Ingresar codigo</ion-button>
+      </ion-card-content>
+
+    </ion-card>
+  </div>
+</ion-content>

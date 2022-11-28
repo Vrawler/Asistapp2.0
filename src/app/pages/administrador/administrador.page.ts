@@ -61,7 +61,7 @@ export class AdministradorPage implements OnInit {
       datosfb => {
         this.usuarios = [];
         for(let usuario of datosfb){
-          console.log(usuario.payload.doc.data());
+          // console.log(usuario.payload.doc.data());
           let usu = usuario.payload.doc.data();
           usu['id'] = usuario.payload.doc.id;
           this.usuarios.push(usu);

@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirestService {
 
-  constructor(private fire: AngularFirestore) { }
+  isAutenticated = new BehaviorSubject(false);
+
+  constructor(private fire: AngularFirestore, private router: Router) { }
 
   addFire(coleccion, value){
     try {
@@ -48,5 +52,14 @@ export class FirestService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  getAuthFire(){
+    return this.isAutenticated.value;
+  }
+
+  logOut(){
+    this.isAutenticated.next(false);
+    this.router.navigate(['/login'])
   }
 }

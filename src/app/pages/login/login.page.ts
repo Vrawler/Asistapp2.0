@@ -66,12 +66,10 @@ export class LoginPage implements OnInit {
         };
         //Según el tipo de usuario, se redirige al home respectivo
         this.router.navigate(['/home/perfil/'+usuarioLogin.rut], navigationExtras);
-        this.usuarioService.isAutenticated.next(true);
+        this.fire.isAutenticated.next(true);
         this.usuario.reset();
-        return true;
       }else{
         this.tostadaError();
-        return false;
       }
     }
   }
