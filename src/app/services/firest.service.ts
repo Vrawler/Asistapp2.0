@@ -12,6 +12,7 @@ export class FirestService {
 
   constructor(private fire: AngularFirestore, private router: Router) { }
 
+  //Métodos para firebase 
   addFire(coleccion, value){
     try {
       this.fire.collection(coleccion).add(value);
@@ -62,4 +63,14 @@ export class FirestService {
     this.isAutenticated.next(false);
     this.router.navigate(['/login'])
   }
+
+  loginFire(email, password, coleccion): boolean{
+    for(let u of coleccion){
+      if(u.email == email && u.password== password){
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

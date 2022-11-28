@@ -55,22 +55,23 @@ export class LoginPage implements OnInit {
     var validarCorreo = this.usuario.controls.email.value;
     var validarPassw = this.usuario.controls.password.value;
 
-    //Con el método loginUsuario del usuario.service, rescatamos al usuario
+    //Variables para validar login
+    var valida: boolean = this.fire.loginFire(validarCorreo, validarPassw, this.usuarios)
     var usuarioLogin = this.usuarios.find(usu => usu.email == validarCorreo && usu.password == validarPassw);
-    for(let usrs of this.usuarios){
-      if(usrs.email == validarCorreo && usrs.password == validarPassw){
-        let navigationExtras: NavigationExtras = {
-          state:{
-            usuario: usuarioLogin
-          }
-        };
-        //Según el tipo de usuario, se redirige al home respectivo
-        this.router.navigate(['/home/perfil/'+usuarioLogin.rut], navigationExtras);
-        this.fire.isAutenticated.next(true);
-        this.usuario.reset();
-      }else{
-        this.tostadaError();
-      }
+
+    //validar si existe el usuario en la información traida de frbs
+    if(valida != undefined){
+      let navigationExtras: NavigationExtras = {
+        state:{
+          usuario: usuarioLogin
+        }
+      };
+      //Según el tipo de usuario, se redirige al home respectivo
+      this.router.navigate(['/home/perfil/'+usuarioLogin.rut], navigationExtras);
+      this.fire.isAutenticated.next(true);
+      this.usuario.reset();
+    }else{
+      this.tostadaError();
     }
   }
 
