@@ -43,6 +43,7 @@ export class AdministradorPage implements OnInit {
   usuarios: any[] = [];
   // KEY_USUARIOS = 'usuarios';
   updateId: any = '';
+  v_agregar: boolean = false;
 
   constructor(
     private validacionesService: ValidacionesService,
@@ -96,6 +97,7 @@ export class AdministradorPage implements OnInit {
     this.cargarDatos();
     this.usuario.reset();
     this.verificar_password = '';
+    this.v_agregar = false;
   }
 
   //Método eliminar

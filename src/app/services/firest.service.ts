@@ -26,7 +26,8 @@ export class FirestService {
 
   getDatosFire(coleccion){
     try {
-      return this.fire.collection(coleccion).snapshotChanges();
+      let aux= this.fire.collection(coleccion).snapshotChanges();
+      return aux
     } catch (error) {
       console.log(error);
     }
@@ -80,6 +81,15 @@ export class FirestService {
       return asig
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async addAsistFire(coleccion, value){
+    try {
+      var recId = await this.fire.collection(coleccion).add(value);
+      return recId.id;
+    } catch (error) {
+      console.log(error)
     }
   }
 }

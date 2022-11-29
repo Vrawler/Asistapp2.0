@@ -7,8 +7,8 @@
       <ion-card-content>
         <h1>Lista de clases</h1>
         <div *ngIf="asignaturas.length !=0; elseBlock">
-          <ion-list *ngFor="let asig of asignaturas">
-            <ion-card-content *ngIf="rut == asig.rutprof_asig">
+          <ion-list *ngFor="let asig of asignatura">
+            <ion-card-content *ngIf="rut == asig.rutprof_asignatura">
 
               <ion-list>
 
@@ -17,9 +17,9 @@
                 <ngx-qrcode [elementType]="elementType" [value]="value"></ngx-qrcode>
                 <ion-input placeholder=" " color="color" [(ngModel)]="value" ></ion-input>
 
-                <!-- <ion-button color="primary"  size="small" class="boton" (click)="generarQR()">
+                <ion-button color="primary"  size="small" class="boton" (click)="generarQR(asig.id)">
                   Código QR
-                </ion-button> -->
+                </ion-button>
 
               </ion-list>
               

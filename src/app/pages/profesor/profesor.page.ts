@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { FirestService } from 'src/app/services/firest.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { v4  } from 'uuid';
@@ -16,14 +17,14 @@ export class ProfesorPage implements OnInit {
   count: any;
 
   //Variables para trabajar clases
-  asignaturas: any[] = [];
+  asignaturas: any [] = [];
+  asignatura: any [] = [];
   asig: any;
 
   //Variables para trabajar asistencia
 
   asistencias: any[] = [];
   asist: any;
-  KEY_ASISTENCIAS = 'asistencias';
 
   //Variables para el cod. qr
   elementType = 'canvas';
@@ -32,7 +33,9 @@ export class ProfesorPage implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private usuarioService: UsuarioService,
-    private firestService: FirestService
+    private firestService: FirestService,
+    private loadingController: LoadingController,
+    private toastController: ToastController
     ) { }
 
   ngOnInit() {
@@ -51,6 +54,10 @@ export class ProfesorPage implements OnInit {
           let asig = a.payload.doc.data();
           asig['id'] = a.payload.doc.id;
           this.asignaturas.push(asig);
+          console.log(this.rut)
+          console.log(this.asignaturas)
+          this.asignatura = this.asignaturas.filter(a => a.rutprof_asignatura == this.rut)
+          console.log(this.asignatura)
         }
       }
     );
@@ -58,22 +65,44 @@ export class ProfesorPage implements OnInit {
 
   //Código QR
   async generarQR(cod_asig){
-    this.count = await this.usuarioService.idAsig(this.KEY_ASISTENCIAS);
     this.asist = {
-      codAsist: this.count,
+      codAsist: '',
       cod_asig: cod_asig,
       alumnos: []
     }
 
-    var resp: boolean = await this.usuarioService.agregarAsist(this.KEY_ASISTENCIAS, this.asist);
+    var resp = await this.firestService.addAsistFire('asistencia_clase', this.asist);
+    this.asist.codAsist = resp;
+    this.asig.asist = resp;
+    this.firestService.updateFire('asignaturas', cod_asig, this.asig);
+    this.firestService.updateFire('asistencia_clase', resp, this.asist);
     if(resp){
-      alert('Escanear código.')
+      this.cargandoPantalla('Iniciando clase...');
       this.cargarAsignaturasFbst();
       if(this.value == ''){
-        this.value = JSON.stringify(this.count);
+        this.value = cod_asig;
       }
+      console.log(resp);
     }else{
-      alert('Asistencia del día creada.')
+
     }
+  }
+
+  async cargandoPantalla(message){
+    const cargando = await this.loadingController.create({
+      message,
+      duration: 1500,
+      spinner: 'lines-small'
+    });
+
+    cargando.present();
+  }
+
+  async tostadaError() {
+    const toast = await this.toastController.create({
+      message: 'No se puede volver a crear asistencia hoy.',
+      duration: 3000
+    });
+    toast.present();
   }
 }

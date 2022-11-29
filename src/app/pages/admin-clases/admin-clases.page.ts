@@ -55,6 +55,7 @@ export class AdminClasesPage implements OnInit {
     sigla_asig: new FormControl('',[Validators.required, Validators.pattern('[A-Z]{1,3}[0-9]{1,5}')]), 
     rutprof_asignatura: new FormControl('', [Validators.required]),
     clasif_esc: new FormControl('this.escuela'),
+    asistencia: new FormControl(''),
     id: new FormControl('')
   });
 
@@ -67,6 +68,7 @@ export class AdminClasesPage implements OnInit {
   //Variables validaciones
   valid_cod: string;
   updateIdAsig: any = '';
+  v_agregar: boolean = false;
   
 
   constructor(
@@ -113,8 +115,9 @@ export class AdminClasesPage implements OnInit {
   //Método registrar asignatura
   async registrarAsignatura(){
     //verificar registro
-    await this.cargandoPantalla('Asignatura registrada!')
-    this.firestService.addFire('asignaturas', this.asignatura.value)
+    await this.cargandoPantalla('Asignatura registrada!');
+    this.firestService.addFire('asignaturas', this.asignatura.value);
+    this.v_agregar = false;
     this.asignatura.reset();
   }
 

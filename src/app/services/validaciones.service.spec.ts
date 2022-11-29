@@ -1,16 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+// import { TestBed } from '@angular/core/testing';
 
-import { ValidacionesService } from './validaciones.service';
+// import { ValidacionesService } from './validaciones.service';
 
-describe('ValidacionesService', () => {
-  let service: ValidacionesService;
+// describe('ValidacionesService', () => {
+//   let service: ValidacionesService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ValidacionesService);
-  });
+//   beforeEach(() => {
+//     TestBed.configureTestingModule({});
+//     service = TestBed.inject(ValidacionesService);
+//   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+//   it('should be created', () => {
+//     expect(service).toBeTruthy();
+//   });
+// });

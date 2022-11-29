@@ -28,7 +28,7 @@
         <ion-label>Alumno</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button tab="profesor" *ngIf="usuario.tipo_usuario == 'profesor'">
+      <ion-tab-button tab="profesor/{{usuario.rut}}" *ngIf="usuario.tipo_usuario == 'profesor'">
         <ion-icon name="book-outline"></ion-icon>
         <ion-label>Profesor</ion-label>
       </ion-tab-button>

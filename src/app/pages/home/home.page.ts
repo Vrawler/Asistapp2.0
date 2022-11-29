@@ -16,7 +16,7 @@ export class HomePage implements OnInit{
 
   ngOnInit() {
     this.usuario = this.router.getCurrentNavigation().extras.state.usuario;
-    // console.log(this.usuario);
+    console.log(this.usuario);
   }
 
   //Método para cerrar sesión
