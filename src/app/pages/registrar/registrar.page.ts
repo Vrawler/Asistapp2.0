@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 import { FirestService } from 'src/app/services/firest.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ValidacionesService } from 'src/app/services/validaciones.service';
@@ -32,22 +33,22 @@ export class RegistrarPage implements OnInit {
   usuarios: any[] = [];
   //KEY_USUARIOS = 'usuarios';
 
-  constructor(private usuarioService: UsuarioService, private router: Router, private validacionesService: ValidacionesService, private firestService: FirestService) { }
+  constructor(private usuarioService: UsuarioService, private router: Router, private validacionesService: ValidacionesService, private firestService: FirestService, private loadingController: LoadingController) { }
 
   ngOnInit() {
   }
 
   //método del formulario
-  registrar(){
+  async registrar(){
     //Verificar password
     if (this.usuario.controls.password.value != this.verificar_password) {
-      alert('CONTRASEÑAS NO COINCIDEN!');
+      await this.cargandoPantalla('CONTRASEÑAS NO COINCIDEN')
       return;
     }
 
     //Verificar rut
     if(!this.validacionesService.validarRut(this.usuario.controls.rut.value)){
-      alert('Rut inválido.');
+      await this.cargandoPantalla('RUT INVALIDO, VUELVA A INTENTAR')
       return;
     }
 
@@ -58,7 +59,7 @@ export class RegistrarPage implements OnInit {
     }
 
     this.firestService.addFire('usuarios', this.usuario.value);
-    alert('Usuario registrado.');
+    await this.cargandoPantalla('Usuario registrado!')
     this.router.navigate(['/login']);
   }
 
@@ -66,5 +67,16 @@ export class RegistrarPage implements OnInit {
   btnInicio = function(){
     this.router.navigate(['/inicio']);
   }
+
+    //Método para mostrar "cargando pantalla"
+    async cargandoPantalla(message){
+      const cargando = await this.loadingController.create({
+        message,
+        duration: 1500,
+        spinner: 'lines-small'
+      });
+  
+      cargando.present();
+    }
 
 }

@@ -56,7 +56,7 @@ export class AdministradorPage implements OnInit {
   //Métodos para poder usar storage
   cargarDatos(){
     this.firestService.getDatosFire('usuarios').subscribe(
-      (datosfb: any) => {
+      datosfb => {
         this.usuarios = [];
         for(let usuario of datosfb){
           // console.log(usuario.payload.doc.data());
@@ -69,30 +69,31 @@ export class AdministradorPage implements OnInit {
   }
 
   //método del formulario
-  registrar(){
+  async registrar(){
     
     //Verificar password
-    if(this.usuario.controls.password.value != this.verificar_password) {
-      alert('Contraseñas no coinciden!');
+      if (this.usuario.controls.password.value != this.verificar_password) {
+        await this.cargandoPantalla('CONTRASEÑAS NO COINCIDEN')
+        return;
+      }
+    //Verificar rut
+    if(!this.validacionesService.validarRut(this.usuario.controls.rut.value)){
+      await this.cargandoPantalla('RUT INVALIDO, VUELVA A INTENTAR')
       return;
     }
 
-    //Verificar rut
-    if(!this.validacionesService.validarRut(this.usuario.controls.rut.value)){
-      alert('Rut inválido.')
-      return;
-    }
 
     //Verificar edad
     if(!this.validacionesService.calcEdadReturn(17, this.usuario.controls.fec_nac.value)){
       alert('Edad mínima 17 años.');
-      return
+      return;
     }
+
 
     //verificar registro
     this.firestService.addFire('usuarios', this.usuario.value);
+    await this.cargandoPantalla('Usuario registrado!')
     this.cargarDatos();
-    alert('Usuario registrado!');
     this.usuario.reset();
     this.verificar_password = '';
   }
@@ -105,7 +106,8 @@ export class AdministradorPage implements OnInit {
   }
 
   //Método para traer un usuario
-  buscar(id){
+  async buscar(id){
+    await this.cargandoPantalla('Buscando...')
     var buscarUsu = this.firestService.getDatoFire('usuarios', id);
     buscarUsu.subscribe(
       (resp: any) =>{
@@ -116,8 +118,11 @@ export class AdministradorPage implements OnInit {
     )
   }
 
+
+
   //Método para modificar usuario
-  modificar(){
+  async modificar(){
+    await this.cargandoPantalla('Modificando...')
     let usr = this.usuario.valid;
     this.firestService.updateFire('usuarios', this.updateId, usr);
     this.usuario.reset();
@@ -125,7 +130,8 @@ export class AdministradorPage implements OnInit {
   }
 
   //Método para limpiar campos
-  limpiar(){
+  async limpiar(){
+    await this.cargandoPantalla('Limpiando datos...')
     this.usuario.reset();
     this.verificar_password = '';
   }
@@ -134,10 +140,11 @@ export class AdministradorPage implements OnInit {
   async cargandoPantalla(message){
     const cargando = await this.loadingController.create({
       message,
-      duration: 3000,
+      duration: 1500,
       spinner: 'lines-small'
     });
 
     cargando.present();
   }
+
 }

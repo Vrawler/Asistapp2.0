@@ -12,7 +12,7 @@ import { FirestService } from 'src/app/services/firest.service';
 export class AdminClasesPage implements OnInit {
 
   //Asignatura predefinida
-  // asigPredef: any;
+  asigPredef: any;
 
   //Tipos de asignatura
   escuela: any[] = [{
@@ -50,18 +50,18 @@ export class AdminClasesPage implements OnInit {
   //CRUD para crear una asignatura
 
   asignatura = new FormGroup({
-    cod_asig: new FormControl('',[Validators.required, Validators.pattern('[1-9]{8}')]),
+    // cod_asig: new FormControl('',[Validators.required, Validators.pattern('[1-9]{8}')]),
     nom_asig: new FormControl('',[Validators.required, Validators.minLength(6)]),
     sigla_asig: new FormControl('',[Validators.required, Validators.pattern('[A-Z]{1,3}[0-9]{1,5}')]), 
-    prof_asignatura: new FormControl('', [Validators.required]),
+    rutprof_asignatura: new FormControl('', [Validators.required]),
     clasif_esc: new FormControl('this.escuela'),
-    id: new FormControl()
+    id: new FormControl('')
   });
 
   asignaturas: any[] = [];
-  // KEY_ASIGNATURAS = 'asignaturas';
+
   usuarios: any[] = [];
-  // KEY_USUARIOS = 'usuarios';
+
   usrProf: any[] = [];
 
   //Variables validaciones
@@ -77,7 +77,7 @@ export class AdminClasesPage implements OnInit {
   ngOnInit() {
     this.cargarDatosProf();
     this.cargarAsignaturasFbst();
-    console.log(this.usrProf);
+    
   }
 
   //Método para traer ususarios de tipo profesor
@@ -111,10 +111,10 @@ export class AdminClasesPage implements OnInit {
   }
 
   //Método registrar asignatura
-  registrarAsignatura(){
+  async registrarAsignatura(){
     //verificar registro
+    await this.cargandoPantalla('Asignatura registrada!')
     this.firestService.addFire('asignaturas', this.asignatura.value)
-    alert('Asignatura registrada.');
     this.asignatura.reset();
   }
 
@@ -139,7 +139,8 @@ export class AdminClasesPage implements OnInit {
   }
 
   //Método para modificar asignatura
-  modificarAsig(){
+  async modificarAsig(){
+    await this.cargandoPantalla('Modificando...')
     let asg = this.asignatura.valid;
     this.firestService.updateFire('asignaturas', this.updateIdAsig, asg);
     this.asignatura.reset();
@@ -147,7 +148,8 @@ export class AdminClasesPage implements OnInit {
   }
 
   //Método para limpiar campos
-  limpiarAsig(){
+  async limpiarAsig(){
+    await this.cargandoPantalla('Limpiando datos...')
     this.asignatura.reset();
   }
 

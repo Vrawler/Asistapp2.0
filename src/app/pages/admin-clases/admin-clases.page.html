@@ -5,10 +5,6 @@
 
   <ion-card-content>
     <form [formGroup]="asignatura" (ngSubmit)="registrarAsignatura()">  
-      <ion-item>
-        <ion-label position="stacked">Código asignatura</ion-label>
-        <ion-input type="text" placeholder="Asignar código" formControlName="cod_asig"></ion-input>
-      </ion-item>
 
       <ion-item>
         <ion-label position="stacked">Nombre asigantura</ion-label>
@@ -21,8 +17,8 @@
       </ion-item>
     
       <ion-item>
-        <ion-select placeholder="Seleccione profesor" formControlName="prof_asignatura">
-          <ion-select-option *ngFor="let up of usrProf">{{up.nom_com}}</ion-select-option>
+        <ion-select placeholder="Seleccione profesor" formControlName="rutprof_asignatura">
+          <ion-select-option *ngFor="let up of usrProf" value="{{up.rut}}">{{up.nom_com}}</ion-select-option>
         </ion-select>
       </ion-item>
 
@@ -46,7 +42,7 @@
         <ion-item>
           <ion-card-header>
             <ion-card-title>{{asig.nom_asig}}</ion-card-title>
-            <ion-card-subtitle>{{asig.cod_asig}} - {{asig.sigla_asig}} - {{asig.clasif_esc}} - {{asig.id}} </ion-card-subtitle>
+            <ion-card-subtitle> {{asig.rutprof_asignatura}} - {{asig.cod_asig}} - {{asig.sigla_asig}} - {{asig.clasif_esc}} - {{asig.id}}</ion-card-subtitle>
           </ion-card-header>
           <ion-button slot="end" color="warning" (click)="buscarAsignatura(asig.id)">Buscar</ion-button>
           <ion-button slot="end" color="danger" (click)="eliminarAsignatura(asig.id)">Eliminar</ion-button>

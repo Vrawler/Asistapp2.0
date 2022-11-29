@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FirestService } from 'src/app/services/firest.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { v4  } from 'uuid';
 
@@ -11,18 +12,12 @@ import { v4  } from 'uuid';
 export class ProfesorPage implements OnInit {
 
   //Variables importantes
-  rut: string;
+  rut: string = '';
   count: any;
-
-  //Variables para trabajar profesores
-  profesores: any[] = [];
-  prof: any;
-  KEY_PROFESORES = 'profesor';
 
   //Variables para trabajar clases
   asignaturas: any[] = [];
   asig: any;
-  KEY_ASIGNATURAS: 'asistencias'
 
   //Variables para trabajar asistencia
 
@@ -34,23 +29,39 @@ export class ProfesorPage implements OnInit {
   elementType = 'canvas';
   value = '';
 
-  constructor(private activatedRoute: ActivatedRoute, private usuarioService: UsuarioService) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private usuarioService: UsuarioService,
+    private firestService: FirestService,
+    private router: Router
+    ) { }
 
   ngOnInit() {
     this.rut = this.activatedRoute.snapshot.paramMap.get('rut');
-    this.cargarProfesores();
-    this.cargarAsigProf();
+    // this.cargarAsigProf();
+    this.cargarAsignaturasFbst();
+    console.log(this.asignaturas);
   }
 
   //Métodos para ngOnInit
 
-  async cargarProfesores(){
-    this.profesores = await this.usuarioService.obtenerProfesores(this.KEY_PROFESORES);
+  cargarAsignaturasFbst(){
+    this.firestService.getDatosFire('asignaturas').subscribe(
+      (datosAsigfbst: any) => {
+        this.asignaturas = [];
+        for(let a of datosAsigfbst){
+          // console.log(asignatura.payload.doc.data());
+          let asig = a.payload.doc.data();
+          asig['id'] = a.payload.doc.id;
+          this.asignaturas.push(asig);
+        }
+      }
+    );
   }
 
-  async cargarAsigProf(){
-    this.asignaturas = await this.usuarioService.asignaturaProf(this.KEY_ASIGNATURAS, this.rut);
-  }
+  // async cargarAsigProf(){
+  //   this.asignaturas = await this.usuarioService.asignaturaProf(this.KEY_ASIGNATURAS, this.rut);
+  // }
 
   //Código QR
   async generarQR(cod_asig){
@@ -61,16 +72,16 @@ export class ProfesorPage implements OnInit {
       alumnos: []
     }
 
-    var resp: boolean = await this.usuarioService.agregarAsist(this.KEY_ASISTENCIAS, this.asist);
-    if(resp){
-      alert('Escanear código.')
-      await this.cargarAsigProf();
-      await this.cargarProfesores();
-      if(this.value == ''){
-        this.value = JSON.stringify(this.count);
-      }
-    }else{
-      alert('Asistencia del día creada.')
-    }
-  }
+  //   var resp: boolean = await this.usuarioService.agregarAsist(this.KEY_ASISTENCIAS, this.asist);
+  //   if(resp){
+  //     alert('Escanear código.')
+  //     await this.cargarAsigProf();
+  //     await this.cargarProfesores();
+  //     if(this.value == ''){
+  //       this.value = JSON.stringify(this.count);
+  //     }
+  //   }else{
+  //     alert('Asistencia del día creada.')
+  //   }
+   }
 }
