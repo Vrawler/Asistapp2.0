@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { FirestService } from 'src/app/services/firest.service';
-import { UsuarioService } from 'src/app/services/usuario.service';
 import { ValidacionesService } from 'src/app/services/validaciones.service';
 
 @Component({
@@ -46,7 +45,6 @@ export class AdministradorPage implements OnInit {
   updateId: any = '';
 
   constructor(
-    private usuarioService: UsuarioService,
     private validacionesService: ValidacionesService,
     private loadingController: LoadingController,
     private firestService: FirestService) {}

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
-import { UsuarioService } from 'src/app/services/usuario.service';
+import { FirestService } from 'src/app/services/firest.service';
+// import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
   selector: 'app-admin-clases',
@@ -11,7 +12,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 export class AdminClasesPage implements OnInit {
 
   //Asignatura predefinida
-  asigPredef: any;
+  // asigPredef: any;
 
   //Tipos de asignatura
   escuela: any[] = [{
@@ -48,83 +49,117 @@ export class AdminClasesPage implements OnInit {
   
   //CRUD para crear una asignatura
 
-  asig = new FormGroup({
+  asignatura = new FormGroup({
     cod_asig: new FormControl('',[Validators.required, Validators.pattern('[1-9]{8}')]),
     nom_asig: new FormControl('',[Validators.required, Validators.minLength(6)]),
     sigla_asig: new FormControl('',[Validators.required, Validators.pattern('[A-Z]{1,3}[0-9]{1,5}')]), 
     prof_asignatura: new FormControl('', [Validators.required]),
-    clasif_esc: new FormControl('this.escuela')
+    clasif_esc: new FormControl('this.escuela'),
+    id: new FormControl()
   });
 
   asignaturas: any[] = [];
-  KEY_ASIGNATURAS = 'asignaturas';
+  // KEY_ASIGNATURAS = 'asignaturas';
   usuarios: any[] = [];
-  KEY_USUARIOS = 'usuarios';
+  // KEY_USUARIOS = 'usuarios';
+  usrProf: any[] = [];
 
   //Variables validaciones
   valid_cod: string;
+  updateIdAsig: any = '';
   
 
-  constructor(private usuarioService: UsuarioService, private loadingController: LoadingController) { }
+  constructor(
+    // private usuarioService: UsuarioService, 
+    private loadingController: LoadingController,
+    private firestService: FirestService) { }
 
-  async ngOnInit() {
-    await this.cargarAsignaturas();
-    await this.asignarProfesor();
+  ngOnInit() {
+    this.cargarDatosProf;
+    this.cargarAsignaturasFbst();
 
-    this.asigPredef = {
-      cod_asig: '15483569',
-      nom_asig: 'Programación de algoritmos cuánticos',
-      sigla_asig: 'PGY5050',
-      prof_asignatura: 'Rick Sánchez',
-      clasif_esc: 'Informática y telecomunicaciones'
-    };
+    // this.asigPredef = {
+    //   cod_asig: '15483569',
+    //   nom_asig: 'Programación de algoritmos cuánticos',
+    //   sigla_asig: 'PGY5050',
+    //   prof_asignatura: 'Rick Sánchez',
+    //   clasif_esc: 'Informática y telecomunicaciones'
+    // };
 
-    await this.usuarioService.agregarAsignatura(this.KEY_ASIGNATURAS, this.asigPredef);
-  }
-
-  //Método para poder usar storage
-  async cargarAsignaturas(){
-    this.asignaturas = await this.usuarioService.obtenerAsignaturas(this.KEY_ASIGNATURAS);
+    // this.firestService.addFire('asignaturas', this.asigPredef);
   }
 
   //Método para traer ususarios de tipo profesor
-  async asignarProfesor(){
-    this.usuarios = await this.usuarioService.obtenerProfesores(this.KEY_USUARIOS);
+  cargarDatosProf(){
+    this.firestService.getDatosFire('usuarios').subscribe(
+      datosfb => {
+        this.usuarios = [];
+        for(let usuario of datosfb){
+          // console.log(usuario.payload.doc.data());
+          let usu = usuario.payload.doc.data();
+          usu['id'] = usuario.payload.doc.id;
+          this.usuarios.push(usu);
+          this.usrProf = this.usuarios.filter(u => u.tipo_usuario == 'profesor');
+        }
+      }
+    );
+  }
+
+  cargarAsignaturasFbst(){
+    this.firestService.getDatosFire('asignaturas').subscribe(
+      datosAsigfbst => {
+        this.asignaturas = [];
+        for(let asignatura of datosAsigfbst){
+          // console.log(asignatura.payload.doc.data());
+          let asig = asignatura.payload.doc.data();
+          asig['id'] = asignatura.payload.doc.id;
+          this.asignaturas.push(asig);
+        }
+      }
+    );
   }
 
   //Método registrar asignatura
-  async registrarAsignatura(){
+  registrarAsignatura(){
     //verificar registro
-    var resp = await this.usuarioService.agregarAsignatura(this.KEY_ASIGNATURAS, this.asig.value);
-    if(resp){
-      this.cargarAsignaturas();
-    }
+    this.firestService.addFire('asignaturas', this.asignatura)
+    this.cargarAsignaturasFbst();
+    this.cargarDatosProf();
     alert('Asignatura registrada.');
-    this.asig.reset();
+    this.asignatura.reset();
   }
 
   //Método eliminar asignatura
-  async eliminarAsignatura(cod_asig){
-    await this.usuarioService.eliminarAsig(this.KEY_ASIGNATURAS, cod_asig);
+  async eliminarAsignatura(id){
+    this.firestService.deleteFire('asignaturas', id);
     await this.cargandoPantalla('Eliminando...')
-    await this.cargarAsignaturas();
+    this.cargarAsignaturasFbst();
+    this.cargarDatosProf();
   }
 
   //Método para buscar una asignatura
-  async buscarAsignatura(cod_asig){
-    var buscarAsig = await this.usuarioService.obtenerAsignatura(this.KEY_ASIGNATURAS, cod_asig);
-    this.asig.setValue(buscarAsig);
+  buscarAsignatura(id){
+    var buscarAsig = this.firestService.getDatoFire('asignaturas', id);
+    buscarAsig.subscribe(
+      (resp: any) =>{
+        let asg = resp.data();
+        asg['id'] = resp.id;
+        this.asignatura.setValue( asg )
+      }
+    )
   }
 
   //Método para modificar asignatura
-  async modificarAsig(){
-    this.usuarioService.modificarAsignatura(this.KEY_ASIGNATURAS, this.asignaturas);
-    await this.cargarAsignaturas();
+  modificarAsig(){
+    let asg = this.asignatura.valid;
+    this.firestService.updateFire('asignaturas', this.updateIdAsig, asg);
+    this.asignatura.reset();
+    this.updateIdAsig = '';
   }
 
   //Método para limpiar campos
   limpiarAsig(){
-    this.asig.reset();
+    this.asignatura.reset();
   }
 
   //Método para mostrar "cargando pantalla"

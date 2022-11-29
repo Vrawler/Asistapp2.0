@@ -39,7 +39,7 @@ export class LoginPage implements OnInit {
       registro =>{
         this.usuarios = [];
         for(let usuario of registro){
-          console.log( usuario.payload.doc.data() );
+          // console.log( usuario.payload.doc.data() );
           let usu = usuario.payload.doc.data();
           usu['id'] = usuario.payload.doc.id;
           this.usuarios.push(usu);

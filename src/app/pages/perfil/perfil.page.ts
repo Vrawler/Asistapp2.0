@@ -25,6 +25,6 @@ export class PerfilPage implements OnInit {
   ngOnInit() {
     this.usuario = this.router.getCurrentNavigation().extras.state.usuario;
     this.rut = this.activatedRoute.snapshot.paramMap.get('rut');
-    console.table(this.usuario);
+    // console.table(this.usuario);
   }
 }
