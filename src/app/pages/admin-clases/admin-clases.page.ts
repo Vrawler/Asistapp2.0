@@ -75,29 +75,20 @@ export class AdminClasesPage implements OnInit {
     private firestService: FirestService) { }
 
   ngOnInit() {
-    this.cargarDatosProf;
+    this.cargarDatosProf();
     this.cargarAsignaturasFbst();
-
-    // this.asigPredef = {
-    //   cod_asig: '15483569',
-    //   nom_asig: 'Programación de algoritmos cuánticos',
-    //   sigla_asig: 'PGY5050',
-    //   prof_asignatura: 'Rick Sánchez',
-    //   clasif_esc: 'Informática y telecomunicaciones'
-    // };
-
-    // this.firestService.addFire('asignaturas', this.asigPredef);
+    console.log(this.usrProf);
   }
 
   //Método para traer ususarios de tipo profesor
   cargarDatosProf(){
     this.firestService.getDatosFire('usuarios').subscribe(
-      datosfb => {
+      (datosfb: any) => {
         this.usuarios = [];
-        for(let usuario of datosfb){
+        for(let u of datosfb){
           // console.log(usuario.payload.doc.data());
-          let usu = usuario.payload.doc.data();
-          usu['id'] = usuario.payload.doc.id;
+          let usu = u.payload.doc.data();
+          usu['id'] = u.payload.doc.id;
           this.usuarios.push(usu);
           this.usrProf = this.usuarios.filter(u => u.tipo_usuario == 'profesor');
         }
@@ -107,12 +98,12 @@ export class AdminClasesPage implements OnInit {
 
   cargarAsignaturasFbst(){
     this.firestService.getDatosFire('asignaturas').subscribe(
-      datosAsigfbst => {
+      (datosAsigfbst: any) => {
         this.asignaturas = [];
-        for(let asignatura of datosAsigfbst){
+        for(let a of datosAsigfbst){
           // console.log(asignatura.payload.doc.data());
-          let asig = asignatura.payload.doc.data();
-          asig['id'] = asignatura.payload.doc.id;
+          let asig = a.payload.doc.data();
+          asig['id'] = a.payload.doc.id;
           this.asignaturas.push(asig);
         }
       }
@@ -122,9 +113,7 @@ export class AdminClasesPage implements OnInit {
   //Método registrar asignatura
   registrarAsignatura(){
     //verificar registro
-    this.firestService.addFire('asignaturas', this.asignatura)
-    this.cargarAsignaturasFbst();
-    this.cargarDatosProf();
+    this.firestService.addFire('asignaturas', this.asignatura.value)
     alert('Asignatura registrada.');
     this.asignatura.reset();
   }

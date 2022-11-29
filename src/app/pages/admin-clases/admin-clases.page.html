@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content class="ion-padding">
   <ion-card-header>
     Crear clase
   </ion-card-header>
@@ -22,7 +22,7 @@
     
       <ion-item>
         <ion-select placeholder="Seleccione profesor" formControlName="prof_asignatura">
-          <ion-select-option *ngFor="let e of usrProf">{{e.nom_com}}</ion-select-option>
+          <ion-select-option *ngFor="let up of usrProf">{{up.nom_com}}</ion-select-option>
         </ion-select>
       </ion-item>
 
@@ -32,7 +32,7 @@
         </ion-select>
       </ion-item>
 
-      <ion-button type="submit" [disabled]="!asignatura.valid">Registrar asignatura</ion-button>
+      <ion-button type="submit" color="warning">Registrar asignatura</ion-button>
       <ion-button (click)="modificar()">Modificar</ion-button>
       <ion-button (click)="limpiar()">Limpiar</ion-button>
     </form>
@@ -46,10 +46,10 @@
         <ion-item>
           <ion-card-header>
             <ion-card-title>{{asig.nom_asig}}</ion-card-title>
-            <ion-card-subtitle>{{asig.cod_asig}} - {{asig.sigla_asig}} - {{asig.clasif_esc}} </ion-card-subtitle>
+            <ion-card-subtitle>{{asig.cod_asig}} - {{asig.sigla_asig}} - {{asig.clasif_esc}} - {{asig.id}} </ion-card-subtitle>
           </ion-card-header>
-          <ion-button slot="end" color="warning" (click)="buscarAsignatura(asignatura.id)">Buscar</ion-button>
-          <ion-button slot="end" color="danger" (click)="eliminarAsig(asignatura.id)">Eliminar</ion-button>
+          <ion-button slot="end" color="warning" (click)="buscarAsignatura(asig.id)">Buscar</ion-button>
+          <ion-button slot="end" color="danger" (click)="eliminarAsignatura(asig.id)">Eliminar</ion-button>
         </ion-item>
         <ion-card-content>
           {{asig.clasif_esc}}

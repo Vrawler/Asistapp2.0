@@ -56,7 +56,7 @@ export class AdministradorPage implements OnInit {
   //Métodos para poder usar storage
   cargarDatos(){
     this.firestService.getDatosFire('usuarios').subscribe(
-      datosfb => {
+      (datosfb: any) => {
         this.usuarios = [];
         for(let usuario of datosfb){
           // console.log(usuario.payload.doc.data());
@@ -140,5 +140,4 @@ export class AdministradorPage implements OnInit {
 
     cargando.present();
   }
-
 }

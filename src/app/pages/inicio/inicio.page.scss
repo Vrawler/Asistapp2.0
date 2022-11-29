@@ -22,6 +22,10 @@ ion-card {
     align-items: center;
     justify-content: space-around;
 
+    .imagen_login {
+        width: 100%;
+    }
+
     .user-avatar {
         max-width: 125px;
         height: 125px;

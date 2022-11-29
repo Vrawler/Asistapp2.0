@@ -1,11 +1,11 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Registro de alumno</ion-title>
+  <ion-toolbar color="warning">
+    <ion-title>Registro de Alumno</ion-title>
     <ion-button slot="end" size="small" (click)="btnInicio();">Inicio</ion-button>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
 
   <form [formGroup]="usuario" (ngSubmit)="registrar()">
     <ion-item>
@@ -52,6 +52,6 @@
       <ion-label position="stacked">Repita Contraseña</ion-label>
       <ion-input type="password" placeholder="Ingrese nuevamente contraseña" [(ngModel)]="verificar_password" [ngModelOptions]="{standalone: 'true'}"></ion-input>
     </ion-item>
-    <ion-button type="submit" [disabled]="!usuario.valid">REGISTRAR</ion-button>
+    <ion-button type="submit" color="warning" [disabled]="!usuario.valid">REGISTRAR</ion-button>
   </form>
 </ion-content>

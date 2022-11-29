@@ -73,4 +73,12 @@ export class FirestService {
     return false;
   }
 
+  async addAsignatura(coleccion, value){
+    try {
+      var asig = this.fire.collection(coleccion).add(value);
+      return asig
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
