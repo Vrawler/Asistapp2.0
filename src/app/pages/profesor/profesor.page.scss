@@ -11,6 +11,7 @@ ion-header{
     height: 100vh;
     background-image: url(../../../assets/img/alumnos.jfif);
     background-size: cover;
+    background-attachment: fixed;
     text-align: center;
 }
 
@@ -63,3 +64,15 @@ ion-card {
         }
     }
 }
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  code {
+    white-space: pre-wrap;
+  }

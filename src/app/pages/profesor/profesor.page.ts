@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FirestService } from 'src/app/services/firest.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { v4  } from 'uuid';
@@ -32,15 +32,12 @@ export class ProfesorPage implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private usuarioService: UsuarioService,
-    private firestService: FirestService,
-    private router: Router
+    private firestService: FirestService
     ) { }
 
   ngOnInit() {
     this.rut = this.activatedRoute.snapshot.paramMap.get('rut');
-    // this.cargarAsigProf();
     this.cargarAsignaturasFbst();
-    console.log(this.asignaturas);
   }
 
   //Métodos para ngOnInit
@@ -59,10 +56,6 @@ export class ProfesorPage implements OnInit {
     );
   }
 
-  // async cargarAsigProf(){
-  //   this.asignaturas = await this.usuarioService.asignaturaProf(this.KEY_ASIGNATURAS, this.rut);
-  // }
-
   //Código QR
   async generarQR(cod_asig){
     this.count = await this.usuarioService.idAsig(this.KEY_ASISTENCIAS);
@@ -72,16 +65,15 @@ export class ProfesorPage implements OnInit {
       alumnos: []
     }
 
-  //   var resp: boolean = await this.usuarioService.agregarAsist(this.KEY_ASISTENCIAS, this.asist);
-  //   if(resp){
-  //     alert('Escanear código.')
-  //     await this.cargarAsigProf();
-  //     await this.cargarProfesores();
-  //     if(this.value == ''){
-  //       this.value = JSON.stringify(this.count);
-  //     }
-  //   }else{
-  //     alert('Asistencia del día creada.')
-  //   }
-   }
+    var resp: boolean = await this.usuarioService.agregarAsist(this.KEY_ASISTENCIAS, this.asist);
+    if(resp){
+      alert('Escanear código.')
+      this.cargarAsignaturasFbst();
+      if(this.value == ''){
+        this.value = JSON.stringify(this.count);
+      }
+    }else{
+      alert('Asistencia del día creada.')
+    }
+  }
 }

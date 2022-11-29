@@ -1,33 +1,34 @@
 <ion-content>
   <div  class="fondo-alumno">
-    <ion-card>
-      <img src="../../../assets/img/AsistApp.png" alt="" width="100px">
+    <!-- <ion-card> -->
+      <!-- <img src="../../../assets/img/AsistApp.png" alt="" width="100px"> -->
       <img src="../../../assets/img/icono_profesor.png" alt="" width="200px">
 
       <ion-card-content>
         <h1>Lista de clases</h1>
         <div *ngIf="asignaturas.length !=0; elseBlock">
           <ion-list *ngFor="let asig of asignaturas">
-            <ion-cargitd *ngIf="rut == asig.prof_asignatura">
+            <ion-card-content *ngIf="rut == asig.rutprof_asig">
 
-              <ion-item>
+              <ion-list>
 
-                <ion-card-title> {{asig.nom_asig}} - {{asig.sigla_asig}}</ion-card-title>
+                <ion-label> {{asig.nom_asig}} - {{asig.sigla_asig}} </ion-label>
 
                 <ngx-qrcode [elementType]="elementType" [value]="value"></ngx-qrcode>
                 <ion-input placeholder=" " color="color" [(ngModel)]="value" ></ion-input>
 
-                <ion-button color="primary"  size="small" class="boton" (click)="generarQR()">
+                <!-- <ion-button color="primary"  size="small" class="boton" (click)="generarQR()">
                   Código QR
-                </ion-button>
+                </ion-button> -->
 
-              </ion-item>
-            </ion-card>
+              </ion-list>
+              
+            </ion-card-content>
 
           </ion-list>
         </div>
       </ion-card-content>
 
-    </ion-card>
+    <!-- </ion-card> -->
   </div>
 </ion-content>

@@ -33,7 +33,7 @@ export class AdministradorPage implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(18)]),
     tipo_usuario: new FormControl('this.jerUsuario'),
     nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{9}')]),
-    id: new FormControl()
+    id: new FormControl('')
   });
 
   //Variable para verificar password

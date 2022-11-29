@@ -157,7 +157,7 @@ export class AdminClasesPage implements OnInit {
   async cargandoPantalla(message){
     const cargando = await this.loadingController.create({
       message,
-      duration: 3000,
+      duration: 1500,
       spinner: 'lines-small'
     });
 
