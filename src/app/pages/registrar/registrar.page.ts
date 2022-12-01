@@ -5,6 +5,7 @@ import { LoadingController } from '@ionic/angular';
 import { FirestService } from 'src/app/services/firest.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ValidacionesService } from 'src/app/services/validaciones.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-registrar',
@@ -33,7 +34,7 @@ export class RegistrarPage implements OnInit {
   usuarios: any[] = [];
   //KEY_USUARIOS = 'usuarios';
 
-  constructor(private usuarioService: UsuarioService, private router: Router, private validacionesService: ValidacionesService, private firestService: FirestService, private loadingController: LoadingController) { }
+  constructor(private usuarioService: UsuarioService, private router: Router, private validacionesService: ValidacionesService, private firestService: FirestService, private loadingController: LoadingController, private alertController: AlertController) { }
 
   ngOnInit() {
   }
@@ -42,26 +43,25 @@ export class RegistrarPage implements OnInit {
   async registrar(){
     //Verificar password
     if (this.usuario.controls.password.value != this.verificar_password) {
-      await this.cargandoPantalla('CONTRASEÑAS NO COINCIDEN')
-      return;
+      //await this.cargandoPantalla('CONTRASEÑAS NO COINCIDEN')
+      return this.presentAlert('CONTRASEÑAS NO COINCIDEN!');
     }
 
     //Verificar rut
     if(!this.validacionesService.validarRut(this.usuario.controls.rut.value)){
-      await this.cargandoPantalla('RUT INVALIDO, VUELVA A INTENTAR')
-      return;
+      return this.presentAlert('RUT INVALIDO, VUELVA A INTENTAR')
     }
 
     //Verificar edad
     if(!this.validacionesService.calcEdadReturn(17, this.usuario.controls.fec_nac.value)){
-      alert('Edad mínima 17 años.');
-      return;
+      return this.presentAlert('La edad debe ser mayor a 17 años!');
     }
 
     this.firestService.addFire('usuarios', this.usuario.value);
-    await this.cargandoPantalla('Usuario registrado!')
+    this.presentAlert('Usuario registrado!')
     this.router.navigate(['/login']);
   }
+  
 
   //Función para botón
   btnInicio = function(){
@@ -78,5 +78,16 @@ export class RegistrarPage implements OnInit {
   
       cargando.present();
     }
+
+
+    async presentAlert(mensaje:string) {
+      const alert = await this.alertController.create({
+        header: mensaje,
+        message: '',
+        buttons: ['OK'],
+      });
+  
+      await alert.present();
+    }
 
 }

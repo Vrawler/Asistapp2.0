@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { FirestService } from 'src/app/services/firest.service';
 import { ValidacionesService } from 'src/app/services/validaciones.service';
 
@@ -48,6 +48,7 @@ export class AdministradorPage implements OnInit {
   constructor(
     private validacionesService: ValidacionesService,
     private loadingController: LoadingController,
+    private alertController: AlertController,
     private firestService: FirestService) {}
 
   ngOnInit() {
@@ -74,26 +75,26 @@ export class AdministradorPage implements OnInit {
     
     //Verificar password
       if (this.usuario.controls.password.value != this.verificar_password) {
-        await this.cargandoPantalla('CONTRASEÑAS NO COINCIDEN')
-        return;
+        return this.presentAlert('CONTRASEÑAS NO COINCIDEN!');
+        
       }
     //Verificar rut
     if(!this.validacionesService.validarRut(this.usuario.controls.rut.value)){
-      await this.cargandoPantalla('RUT INVALIDO, VUELVA A INTENTAR')
-      return;
+      return this.presentAlert('RUT INVALIDO, VUELVA A INTENTAR')
+     
     }
 
 
     //Verificar edad
     if(!this.validacionesService.calcEdadReturn(17, this.usuario.controls.fec_nac.value)){
-      alert('Edad mínima 17 años.');
-      return;
+      return this.presentAlert('La edad debe ser mayor a 17 años!');
+      
     }
 
 
     //verificar registro
     this.firestService.addFire('usuarios', this.usuario.value);
-    await this.cargandoPantalla('Usuario registrado!')
+    this.presentAlert('Usuario registrado!')
     this.cargarDatos();
     this.usuario.reset();
     this.verificar_password = '';
@@ -148,5 +149,15 @@ export class AdministradorPage implements OnInit {
 
     cargando.present();
   }
+
+  async presentAlert(mensaje:string) {
+    const alert = await this.alertController.create({
+      header: mensaje,
+      message: '',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
 
 }

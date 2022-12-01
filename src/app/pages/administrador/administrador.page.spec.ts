@@ -65,17 +65,5 @@ describe('PRUEBA UNITARIAS: administrador', ()=>{
       app.registrar();
   
       expect(app.v_agregar).toBeFalse();
-    });
-  
-  
-    /* it('5. Tener usuarios en firebase', ()=>{
-      const fixture = TestBed.createComponent(HomePage);
-      const app = fixture.componentInstance;
-  
-      app.listar();
-  
-      expect(app.usuarios.length).toBeGreaterThanOrEqual(0);
-    }); */
-  
-  
+    });  
   });

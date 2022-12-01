@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class RecuperarPassPage implements OnInit {
 
 
 
-  constructor(private toastController: ToastController, private router:Router,private usuarioService: UsuarioService) { }
+  constructor(private toastController: ToastController, private router:Router,private usuarioService: UsuarioService, private alertController: AlertController) { }
 
   async ngOnInit() {
     this.usuarios = await this.usuarioService.obtenerUsuarios(this.KEY_USUARIOS);
@@ -29,7 +29,8 @@ async recuperarContra(){
   var validarEmail = await this.usuarioService.validarCorreorpw(this.email)
     if (validarEmail != undefined) {
       if (validarEmail.email == this.email) {
-        alert('Se envió un correo electrónico de recuperación');
+        //alert('Se envió un correo electrónico de recuperación');
+        this.presentAlert('Se envió un correo electrónico de recuperación')
       }
     }else{
       this.tstError();
@@ -44,8 +45,18 @@ async recuperarContra(){
     toast.present();
   }
 
+  async presentAlert(mensaje:string) {
+    const alert = await this.alertController.create({
+      header: mensaje,
+      message: '',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
+
   //Función para botón
   btnInicio = function(){
     this.router.navigate(['/inicio']);
-  }
+  }
 }

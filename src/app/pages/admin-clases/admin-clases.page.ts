@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { FirestService } from 'src/app/services/firest.service';
 // import { UsuarioService } from 'src/app/services/usuario.service';
 
@@ -74,6 +74,7 @@ export class AdminClasesPage implements OnInit {
   constructor(
     // private usuarioService: UsuarioService, 
     private loadingController: LoadingController,
+    private alertController: AlertController,
     private firestService: FirestService) { }
 
   ngOnInit() {
@@ -115,7 +116,7 @@ export class AdminClasesPage implements OnInit {
   //Método registrar asignatura
   async registrarAsignatura(){
     //verificar registro
-    await this.cargandoPantalla('Asignatura registrada!');
+    this.presentAlert('Asignatura registrada!')
     this.firestService.addFire('asignaturas', this.asignatura.value);
     this.v_agregar = false;
     this.asignatura.reset();
@@ -166,5 +167,15 @@ export class AdminClasesPage implements OnInit {
 
     cargando.present();
   }
+
+  async presentAlert(mensaje:string) {
+    const alert = await this.alertController.create({
+      header: mensaje,
+      message: '',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
 
 }
