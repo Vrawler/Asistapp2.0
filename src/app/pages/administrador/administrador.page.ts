@@ -41,8 +41,7 @@ export class AdministradorPage implements OnInit {
 
   //Variables para trabajar el storage
   usuarios: any[] = [];
-  // KEY_USUARIOS = 'usuarios';
-  updateId: any = '';
+  // updateId: any = '';
   v_agregar: boolean = false;
 
   constructor(
@@ -87,10 +86,8 @@ export class AdministradorPage implements OnInit {
 
     //Verificar edad
     if(!this.validacionesService.calcEdadReturn(17, this.usuario.controls.fec_nac.value)){
-      return this.presentAlert('La edad debe ser mayor a 17 años!');
-      
+      return this.presentAlert('La edad debe ser mayor a 17 años!'); 
     }
-
 
     //verificar registro
     this.firestService.addFire('usuarios', this.usuario.value);
@@ -125,11 +122,27 @@ export class AdministradorPage implements OnInit {
 
   //Método para modificar usuario
   async modificar(){
+    //Verificar password
+    if (this.usuario.controls.password.value != this.verificar_password) {
+      return this.presentAlert('CONTRASEÑAS NO COINCIDEN!');
+    }
+
+    //Verificar rut
+    if(!this.validacionesService.validarRut(this.usuario.controls.rut.value)){
+    return this.presentAlert('RUT INVALIDO, VUELVA A INTENTAR')
+    }
+
+    //Verificar edad
+    if(!this.validacionesService.calcEdadReturn(17, this.usuario.controls.fec_nac.value)){
+    return this.presentAlert('La edad debe ser mayor a 17 años!');  
+    }
+
     await this.cargandoPantalla('Modificando...')
-    let usr = this.usuario.valid;
-    this.firestService.updateFire('usuarios', this.updateId, usr);
+
+    let usr = this.usuario.value;
+    this.firestService.updateFire('usuarios', this.usuario.value.id, usr);
     this.usuario.reset();
-    this.updateId = '';
+    // this.updateId = '';
   }
 
   //Método para limpiar campos

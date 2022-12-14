@@ -52,7 +52,7 @@ export class AdminClasesPage implements OnInit {
   asignatura = new FormGroup({
     // cod_asig: new FormControl('',[Validators.required, Validators.pattern('[1-9]{8}')]),
     nom_asig: new FormControl('',[Validators.required, Validators.minLength(6)]),
-    sigla_asig: new FormControl('',[Validators.required, Validators.pattern('[A-Z]{1,3}[0-9]{1,5}')]), 
+    sigla_asig: new FormControl('',[Validators.required, Validators.pattern('[A-Z]{3}[0-9]{4,5}')]), 
     rutprof_asignatura: new FormControl('', [Validators.required]),
     clasif_esc: new FormControl('this.escuela'),
     asistencia: new FormControl(''),

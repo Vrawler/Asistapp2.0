@@ -9,7 +9,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 })
 export class AlumnoPage implements OnInit {
 
-  rut: string;
+  rut: string = '';
   usuario: any;
 
   asignaturas: any [] = [];
@@ -24,15 +24,15 @@ export class AlumnoPage implements OnInit {
 
 
   //Variable para trabajar el storage
-  KEY_USUARIOS = 'usuarios';
+  // KEY_USUARIOS = 'usuarios';
 
   constructor(private activatedRoute: ActivatedRoute, private usuarioService: UsuarioService) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.rut = this.activatedRoute.snapshot.paramMap.get('rut');
-    this.usuario = await this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, this.rut);
-    await this.cargarAsignaturas();
-    await this.cargarAsistencias();
+    // this.usuario = await this.usuarioService.obtenerUsuario(this.KEY_USUARIOS, this.rut);
+    this.cargarAsignaturas();
+    this.cargarAsistencias();
   }
 
   async cargarAsignaturas(){
@@ -43,8 +43,8 @@ export class AlumnoPage implements OnInit {
     this.asistencias = await this.usuarioService.obtenerAsistencias(this.KEY_ASISTENCIAS);
   }
   
-  async guardarAsist(){
-      await this.usuarioService.guardarAsist(this.KEY_ASISTENCIAS, this.codigoQr,this.rut);
-  }
+  // async guardarAsist(){
+  //     await this.usuarioService.guardarAsist(this.KEY_ASISTENCIAS, this.codigoQr,this.rut);
+  // }
 
 }

@@ -1,11 +1,19 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>No se encontró la página</ion-title>
+    <ion-title>Error 404: No se encontró la página</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="fondo-error404">
-  <img src="../../../assets/img/errorpage.jpg" alt="" width="1000px" >
+  <!-- <img src="../../../assets/img/errorpage.jpg" alt="" width="1000px" > -->
+  <h1>
+    No encontramos la página, pero ten un pokémon
+  </h1>
+  <ion-img src="{{pkmn_img}}" class="pkmn"></ion-img>
+  <h2> Nombre: {{pkmn_nm}} </h2>
+  <h2>
+    Tipo: <span *ngFor = 'let t of pkmn_type'>  {{t.type.name}} </span>
+  </h2>
   <ion-button routerLink="/login" expand="block" class="ion-margin-top">
     Volver al inicio
   </ion-button>
