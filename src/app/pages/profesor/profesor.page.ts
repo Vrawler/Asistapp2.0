@@ -32,7 +32,6 @@ export class ProfesorPage implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private usuarioService: UsuarioService,
     private firestService: FirestService,
     private loadingController: LoadingController,
     private toastController: ToastController

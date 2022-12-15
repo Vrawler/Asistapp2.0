@@ -47,12 +47,12 @@ export class AdminClasesPage implements OnInit {
   //CRUD para crear una asignatura
 
   asignatura = new FormGroup({
-    // cod_asig: new FormControl('',[Validators.required, Validators.pattern('[1-9]{8}')]),
     nom_asig: new FormControl('',[Validators.required, Validators.minLength(6)]),
-    sigla_asig: new FormControl('',[Validators.required, Validators.pattern('[A-Z]{3}[0-9]{4,5}')]), 
+    sigla_asig: new FormControl('',[Validators.required, Validators.pattern('[A-Z]{3}[0-9]{4,5}')]),
+    secc_asig: new FormControl('',[Validators.required, Validators.pattern('[0-9]{3}[A-Z]{1}')]), 
     rutprof_asignatura: new FormControl('', [Validators.required]),
     clasif_esc: new FormControl('this.escuela'),
-    asistencia: new FormControl(''),
+    asistencia: new FormControl([]),
     id: new FormControl('')
   });
 
@@ -64,13 +64,14 @@ export class AdminClasesPage implements OnInit {
 
   usrProf: any[] = [];
 
+  usrAlumn: any[] = [];
+
   //Variables validaciones
   valid_cod: string;
   v_agregar: boolean = false;
   
 
   constructor(
-    // private usuarioService: UsuarioService, 
     private loadingController: LoadingController,
     private alertController: AlertController,
     private firestService: FirestService) { }
@@ -78,7 +79,7 @@ export class AdminClasesPage implements OnInit {
   ngOnInit() {
     this.cargarDatosProf();
     this.cargarAsignaturasFbst();
-    
+    this.cargarDatosAlumn();
   }
 
   //Método para traer ususarios de tipo profesor
@@ -92,6 +93,22 @@ export class AdminClasesPage implements OnInit {
           usu['id'] = u.payload.doc.id;
           this.usuarios.push(usu);
           this.usrProf = this.usuarios.filter(u => u.tipo_usuario == 'profesor');
+        }
+      }
+    );
+  }
+
+  //Método para traer alumnos
+  cargarDatosAlumn(){
+    this.firestService.getDatosFire('usuarios').subscribe(
+      (datosfb: any) => {
+        this.usuarios = [];
+        for(let u of datosfb){
+          // console.log(u.payload.doc.data());
+          let usu = u.payload.doc.data();
+          usu['id'] = u.payload.doc.id;
+          this.usuarios.push(usu);
+          this.usrAlumn = this.usuarios.filter(u => u.tipo_usuario == 'alumno');
         }
       }
     );
@@ -114,7 +131,7 @@ export class AdminClasesPage implements OnInit {
   //Método registrar asignatura
   async registrarAsignatura(){
     //verificar registro
-    this.buscarAsig = this.asignaturas.find(a => a.sigla_asig == this.asignatura.value.sigla_asig);
+    this.buscarAsig = this.asignaturas.find(a => a.secc_asig == this.asignatura.value.secc_asig);
     if(this.buscarAsig == undefined){
       this.firestService.addFire('asignaturas', this.asignatura.value);
       this.presentAlert('Asignatura registrada!');

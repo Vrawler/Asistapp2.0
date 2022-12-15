@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
+import { FirestService } from 'src/app/services/firest.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
@@ -19,10 +20,30 @@ export class RecuperarPassPage implements OnInit {
 
 
 
-  constructor(private toastController: ToastController, private router:Router,private usuarioService: UsuarioService, private alertController: AlertController) { }
+  constructor(
+    private toastController: ToastController, 
+    private router: Router,
+    private usuarioService: UsuarioService, 
+    private alertController: AlertController,
+    private firestService: FirestService
+    ) { }
 
   async ngOnInit() {
     this.usuarios = await this.usuarioService.obtenerUsuarios(this.KEY_USUARIOS);
+  }
+
+  cargarDatos(){
+    this.firestService.getDatosFire('usuarios').subscribe(
+      datosfb => {
+        this.usuarios = [];
+        for(let usuario of datosfb){
+          // console.log(usuario.payload.doc.data());
+          let usu = usuario.payload.doc.data();
+          usu['id'] = usuario.payload.doc.id;
+          this.usuarios.push(usu);
+        }
+      }
+    );
   }
 
 async recuperarContra(){

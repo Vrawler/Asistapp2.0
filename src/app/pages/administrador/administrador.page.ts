@@ -59,12 +59,13 @@ export class AdministradorPage implements OnInit {
   ngOnInit() {
     this.cargarDatos();
   }
-
+  
+  //método para autocompletar dirección con maps
   public handleAddressChange(address: Address) {
     console.log(address);
   }
 
-  //Métodos para poder usar storage
+  //Métodos para poder usar fire
   cargarDatos(){
     this.firestService.getDatosFire('usuarios').subscribe(
       datosfb => {
@@ -106,7 +107,7 @@ export class AdministradorPage implements OnInit {
       this.presentAlert('El rut ya está registrado.');
     }else if(this.buscarEmail != undefined){
       this.presentAlert('El email ya está registrado.')
-    }
+    };
 
     //verificar registro
     this.cargarDatos();

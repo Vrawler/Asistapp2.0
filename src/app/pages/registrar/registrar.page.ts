@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
@@ -6,6 +6,9 @@ import { FirestService } from 'src/app/services/firest.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ValidacionesService } from 'src/app/services/validaciones.service';
 import { AlertController } from '@ionic/angular';
+import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
+import { Address } from 'ngx-google-places-autocomplete/objects/address';
+
 
 @Component({
   selector: 'app-registrar',
@@ -13,6 +16,8 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./registrar.page.scss'],
 })
 export class RegistrarPage implements OnInit {
+
+  @ViewChild("placesRef") placesRef : GooglePlaceDirective;
 
   //VAMOS A CREAR EL GRUPO DEL FORMULARIO:
   usuario = new FormGroup({
@@ -27,8 +32,10 @@ export class RegistrarPage implements OnInit {
     nro_cel: new FormControl('', [Validators.required, Validators.pattern('[0-9]{0,9}')])
   });
 
-  //Variable para verificar pass
+  //Variable para validar campos
   verificar_password: string;
+  buscarUsu: any = '';
+  buscarEmail: any = '';
 
   //Variables para trabajar el storage
   usuarios: any[] = [];
@@ -37,6 +44,14 @@ export class RegistrarPage implements OnInit {
   constructor(private usuarioService: UsuarioService, private router: Router, private validacionesService: ValidacionesService, private firestService: FirestService, private loadingController: LoadingController, private alertController: AlertController) { }
 
   ngOnInit() {
+    this.usuario.patchValue({
+      email: '@duocuc.cl'
+    });
+  }
+
+  //método para autocompletar dirección con maps
+  public handleAddressChange(address: Address) {
+    console.log(address);
   }
 
   //método del formulario
@@ -57,37 +72,45 @@ export class RegistrarPage implements OnInit {
       return this.presentAlert('La edad debe ser mayor a 17 años!');
     }
 
-    this.firestService.addFire('usuarios', this.usuario.value);
-    this.presentAlert('Usuario registrado!')
+    this.buscarUsu = this.usuarios.find(u => u.rut == this.usuario.value.rut);
+    this.buscarEmail = this.usuarios.find(u => u.email == this.usuario.value.email);
+    if(this.buscarUsu == undefined && this.buscarEmail == undefined){
+      this.firestService.addFire('usuarios', this.usuario.value);
+      this.presentAlert('Usuario registrado!')
+    }else if(this.buscarUsu != undefined){
+      this.presentAlert('El rut ya está registrado.');
+    }else if(this.buscarEmail != undefined){
+      this.presentAlert('El email ya está registrado.')
+    };
+
     this.router.navigate(['/login']);
   }
-  
 
   //Función para botón
   btnInicio = function(){
     this.router.navigate(['/inicio']);
   }
 
-    //Método para mostrar "cargando pantalla"
-    async cargandoPantalla(message){
-      const cargando = await this.loadingController.create({
-        message,
-        duration: 1500,
-        spinner: 'lines-small'
-      });
-  
-      cargando.present();
-    }
+  //Método para mostrar "cargando pantalla"
+  async cargandoPantalla(message){
+    const cargando = await this.loadingController.create({
+      message,
+      duration: 1500,
+      spinner: 'lines-small'
+    });
+
+    cargando.present();
+  }
 
 
-    async presentAlert(mensaje:string) {
-      const alert = await this.alertController.create({
-        header: mensaje,
-        message: '',
-        buttons: ['OK'],
-      });
-  
-      await alert.present();
-    }
+  async presentAlert(mensaje:string) {
+    const alert = await this.alertController.create({
+      header: mensaje,
+      message: '',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
 
 }

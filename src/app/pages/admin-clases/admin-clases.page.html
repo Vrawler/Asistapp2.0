@@ -1,6 +1,6 @@
 <ion-content class="ion-padding">
   <ion-card-header>
-    Crear clase
+    <h1>Crear clase</h1>
   </ion-card-header>
 
   <ion-card-content>
@@ -15,6 +15,11 @@
         <ion-label position="stacked">Sigla asignatura</ion-label>
         <ion-input type="text" placeholder="Ingrese la sigla de la asignatura" formControlName="sigla_asig"></ion-input>
       </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Código sección</ion-label>
+        <ion-input type="text" placeholder="Ingrese código de sección de la asignatura" formControlName="secc_asig"></ion-input>
+      </ion-item>
     
       <ion-item>
         <ion-select placeholder="Seleccione profesor" formControlName="rutprof_asignatura">
@@ -23,8 +28,14 @@
       </ion-item>
 
       <ion-item>
-        <ion-select placeholder="Escuela" formControlName="clasif_esc">
+        <ion-select placeholder="Escuela" formControlName="clasif_esc" >
           <ion-select-option *ngFor="let esc of escuela">{{esc.escDuoc}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-select placeholder="Lista de estudiantes de la asignatura" formControlName="asistencia" [multiple]="true">
+          <ion-select-option *ngFor="let ua of usrAlumn" value="{{ua.rut}}">{{ua.nom_com}}</ion-select-option>
         </ion-select>
       </ion-item>
 
@@ -42,7 +53,7 @@
         <ion-item>
           <ion-card-header>
             <ion-card-title>{{asig.nom_asig}}</ion-card-title>
-            <ion-card-subtitle> {{asig.rutprof_asignatura}} - {{asig.sigla_asig}} - {{asig.clasif_esc}} - {{asig.id}}</ion-card-subtitle>
+            <ion-card-subtitle> {{asig.rutprof_asignatura}} - {{asig.sigla_asig}} - {{asig.secc_asig}} - {{asig.clasif_esc}} - {{asig.id}}</ion-card-subtitle>
           </ion-card-header>
           <ion-button slot="end" color="warning" (click)="buscarAsignatura(asig.id)">Buscar</ion-button>
           <ion-button slot="end" color="danger" (click)="eliminarAsignatura(asig.id)">Eliminar</ion-button>

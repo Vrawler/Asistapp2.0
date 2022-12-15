@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { RegistrarPageRoutingModule } from './registrar-routing.module';
 
 import { RegistrarPage } from './registrar.page';
+import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+
 
 @NgModule({
   imports: [
@@ -14,7 +16,8 @@ import { RegistrarPage } from './registrar.page';
     FormsModule,
     IonicModule,
     RegistrarPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    GooglePlaceModule
   ],
   declarations: [RegistrarPage]
 })
