@@ -29,7 +29,7 @@
       </ion-item>
 
       <ion-button type="submit" color="warning">Registrar asignatura</ion-button>
-      <ion-button (click)="modificar()">Modificar</ion-button>
+      <ion-button (click)="modificarAsig()">Modificar</ion-button>
       <ion-button (click)="limpiarAsig()">Limpiar</ion-button>
     </form>
   </ion-card-content>
@@ -42,7 +42,7 @@
         <ion-item>
           <ion-card-header>
             <ion-card-title>{{asig.nom_asig}}</ion-card-title>
-            <ion-card-subtitle> {{asig.rutprof_asignatura}} - {{asig.cod_asig}} - {{asig.sigla_asig}} - {{asig.clasif_esc}} - {{asig.id}}</ion-card-subtitle>
+            <ion-card-subtitle> {{asig.rutprof_asignatura}} - {{asig.sigla_asig}} - {{asig.clasif_esc}} - {{asig.id}}</ion-card-subtitle>
           </ion-card-header>
           <ion-button slot="end" color="warning" (click)="buscarAsignatura(asig.id)">Buscar</ion-button>
           <ion-button slot="end" color="danger" (click)="eliminarAsignatura(asig.id)">Eliminar</ion-button>

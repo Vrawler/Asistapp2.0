@@ -60,7 +60,7 @@ export class LoginPage implements OnInit {
     var usuarioLogin = this.usuarios.find(usu => usu.email == validarCorreo && usu.password == validarPassw);
 
     //validar si existe el usuario en la información traida de frbs
-    if(valida != undefined){
+    if(valida != false){
       let navigationExtras: NavigationExtras = {
         state:{
           usuario: usuarioLogin

@@ -36,8 +36,9 @@ export class AdministradorPage implements OnInit {
     id: new FormControl('')
   });
 
-  //Variable para verificar password
+  //Variable para validar
   verificar_password: string;
+  buscarUsu: any = '';
 
   //Variables para trabajar el storage
   usuarios: any[] = [];
@@ -75,23 +76,27 @@ export class AdministradorPage implements OnInit {
     //Verificar password
       if (this.usuario.controls.password.value != this.verificar_password) {
         return this.presentAlert('CONTRASEÑAS NO COINCIDEN!');
-        
       }
+
     //Verificar rut
     if(!this.validacionesService.validarRut(this.usuario.controls.rut.value)){
       return this.presentAlert('RUT INVALIDO, VUELVA A INTENTAR')
-     
     }
-
 
     //Verificar edad
     if(!this.validacionesService.calcEdadReturn(17, this.usuario.controls.fec_nac.value)){
       return this.presentAlert('La edad debe ser mayor a 17 años!'); 
     }
 
+    this.buscarUsu = this.usuarios.find(u => u.rut = this.usuario.value.rut);
+    if(this.buscarUsu == undefined){
+      this.firestService.addFire('usuarios', this.usuario.value);
+      this.presentAlert('Usuario registrado!')
+    }else{
+      this.presentAlert('Rut ya se encuentra en la base de datos');
+    }
+
     //verificar registro
-    this.firestService.addFire('usuarios', this.usuario.value);
-    this.presentAlert('Usuario registrado!')
     this.cargarDatos();
     this.usuario.reset();
     this.verificar_password = '';

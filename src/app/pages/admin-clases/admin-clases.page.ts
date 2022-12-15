@@ -11,9 +11,6 @@ import { FirestService } from 'src/app/services/firest.service';
 })
 export class AdminClasesPage implements OnInit {
 
-  //Asignatura predefinida
-  asigPredef: any;
-
   //Tipos de asignatura
   escuela: any[] = [{
     escDuoc:'Administración y negocios'
@@ -61,13 +58,14 @@ export class AdminClasesPage implements OnInit {
 
   asignaturas: any[] = [];
 
+  buscarAsig: any = '';
+
   usuarios: any[] = [];
 
   usrProf: any[] = [];
 
   //Variables validaciones
   valid_cod: string;
-  updateIdAsig: any = '';
   v_agregar: boolean = false;
   
 
@@ -116,10 +114,18 @@ export class AdminClasesPage implements OnInit {
   //Método registrar asignatura
   async registrarAsignatura(){
     //verificar registro
-    this.presentAlert('Asignatura registrada!')
-    this.firestService.addFire('asignaturas', this.asignatura.value);
+    this.buscarAsig = this.asignaturas.find(a => a.sigla_asig == this.asignatura.value.sigla_asig);
+    if(this.buscarAsig == undefined){
+      this.firestService.addFire('asignaturas', this.asignatura.value);
+      this.presentAlert('Asignatura registrada!');
+      this.asignatura.reset();
+    }else{
+      this.presentAlert('Asignatura ya se encuentra creada.')
+    }
+    
+    
     this.v_agregar = false;
-    this.asignatura.reset();
+    
   }
 
   //Método eliminar asignatura
@@ -145,10 +151,9 @@ export class AdminClasesPage implements OnInit {
   //Método para modificar asignatura
   async modificarAsig(){
     await this.cargandoPantalla('Modificando...')
-    let asg = this.asignatura.valid;
-    this.firestService.updateFire('asignaturas', this.updateIdAsig, asg);
+    let asg = this.asignatura.value;
+    this.firestService.updateFire('asignaturas', this.asignatura.value.id, asg);
     this.asignatura.reset();
-    this.updateIdAsig = '';
   }
 
   //Método para limpiar campos
