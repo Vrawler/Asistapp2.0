@@ -12,11 +12,9 @@
         <ion-card-content>
 
           <ion-item>
-            <ion-label>Correo usuario</ion-label>
             <ion-input formControlName="email" type="text" placeholder="Ingrese correo usuario"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label>Contraseña</ion-label>
             <ion-input formControlName="password" type="password" placeholder="Ingrese contraseña"></ion-input>
           </ion-item>
           <ion-button type="submit" expand="full" size="small" shape="round" [disabled]="!usuario.valid">Ingresar</ion-button>

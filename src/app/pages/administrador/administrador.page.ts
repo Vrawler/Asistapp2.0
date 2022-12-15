@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController } from '@ionic/angular';
+import { Address } from 'cluster';
+import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 import { FirestService } from 'src/app/services/firest.service';
 import { ValidacionesService } from 'src/app/services/validaciones.service';
 
@@ -10,6 +12,8 @@ import { ValidacionesService } from 'src/app/services/validaciones.service';
   styleUrls: ['./administrador.page.scss'],
 })
 export class AdministradorPage implements OnInit {
+
+  @ViewChild("placesRef") placesRef : GooglePlaceDirective;
 
   //Tipos de usuario
   jerUsuario: any[] = [{
@@ -39,6 +43,7 @@ export class AdministradorPage implements OnInit {
   //Variable para validar
   verificar_password: string;
   buscarUsu: any = '';
+  buscarEmail: any = '';
 
   //Variables para trabajar el storage
   usuarios: any[] = [];
@@ -53,6 +58,10 @@ export class AdministradorPage implements OnInit {
 
   ngOnInit() {
     this.cargarDatos();
+  }
+
+  public handleAddressChange(address: Address) {
+    console.log(address);
   }
 
   //Métodos para poder usar storage
@@ -88,12 +97,15 @@ export class AdministradorPage implements OnInit {
       return this.presentAlert('La edad debe ser mayor a 17 años!'); 
     }
 
-    this.buscarUsu = this.usuarios.find(u => u.rut = this.usuario.value.rut);
-    if(this.buscarUsu == undefined){
+    this.buscarUsu = this.usuarios.find(u => u.rut == this.usuario.value.rut);
+    this.buscarEmail = this.usuarios.find(u => u.email == this.usuario.value.email);
+    if(this.buscarUsu == undefined && this.buscarEmail == undefined){
       this.firestService.addFire('usuarios', this.usuario.value);
       this.presentAlert('Usuario registrado!')
-    }else{
-      this.presentAlert('Rut ya se encuentra en la base de datos');
+    }else if(this.buscarUsu != undefined){
+      this.presentAlert('El rut ya está registrado.');
+    }else if(this.buscarEmail != undefined){
+      this.presentAlert('El email ya está registrado.')
     }
 
     //verificar registro
@@ -150,6 +162,37 @@ export class AdministradorPage implements OnInit {
     // this.updateId = '';
   }
 
+  handleChange(e) {
+    if(e.detail.value == 'alumno'){
+      
+      let domEmail = '@duocuc.cl';
+      console.log(domEmail);
+      this.usuario.patchValue({
+        email: domEmail
+      });
+      return this.usuario.value.email = domEmail;
+
+    }else if(e.detail.value == 'profesor'){
+      
+      let domEmail = '@profesor.duoc.cl';
+      console.log(domEmail);
+      this.usuario.patchValue({
+        email: domEmail
+      });
+      return this.usuario.value.email = domEmail;
+    
+    }else{
+      
+      let domEmail = '@duoc.cl';
+      console.log(domEmail);
+      this.usuario.patchValue({
+        email: domEmail
+      });
+      return this.usuario.value.email = domEmail;
+    
+    }
+  };
+
   //Método para limpiar campos
   async limpiar(){
     await this.cargandoPantalla('Limpiando datos...')
@@ -176,6 +219,6 @@ export class AdministradorPage implements OnInit {
     });
 
     await alert.present();
-  }
+  }
 
 }

@@ -8,13 +8,16 @@ import { AdministradorPageRoutingModule } from './administrador-routing.module';
 
 import { AdministradorPage } from './administrador.page';
 
+import { GooglePlaceModule } from "ngx-google-places-autocomplete";
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     AdministradorPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    GooglePlaceModule
   ],
   declarations: [AdministradorPage]
 })

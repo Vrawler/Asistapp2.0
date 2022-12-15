@@ -12,7 +12,7 @@ export class ApiService {
 
   //método para realizar la petición
   async get (){
-    let id = Math.floor(Math.random() * 1150) + 1;
+    let id = Math.floor(Math.random() * 950) + 1;
     return await this.http.get('https://pokeapi.co/api/v2/pokemon/'+id)
   }
 }

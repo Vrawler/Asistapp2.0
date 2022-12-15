@@ -17,6 +17,13 @@
       </ion-item>
 
       <ion-item>
+        <ion-label> Tipo de usuario </ion-label>
+        <ion-select placeholder="tipo de usuario" (ionChange)="handleChange($event)" formControlName="tipo_usuario">
+          <ion-select-option *ngFor="let jer of jerUsuario">{{jer.t_user}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
         <ion-label position="stacked">Correo institucional</ion-label>
         <ion-input type="text" placeholder="Ingrese correo" formControlName="email"></ion-input>
       </ion-item>
@@ -27,20 +34,13 @@
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Dirección</ion-label>
-        <ion-input type="text" placeholder="Ingrese dirección de domicilio" formControlName="direccion" [(ngModel)]="direccion"></ion-input>
+        <ion-label position="fixed">Dirección</ion-label>
+        <input ngx-google-places-autocomplete [options]='options' #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" formControlName="direccion" [(ngModel)]="direccion"/>
       </ion-item>
 
       <ion-item>
         <ion-label position="stacked">Semestre</ion-label>
         <ion-input type="text" placeholder="Ingrese semestre" formControlName="semestre"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label> Tipo de usuario </ion-label>
-        <ion-select placeholder="tipo de usuario" formControlName="tipo_usuario">
-          <ion-select-option *ngFor="let jer of jerUsuario">{{jer.t_user}}</ion-select-option>
-        </ion-select>
       </ion-item>
 
       <ion-item>
@@ -75,7 +75,7 @@
               <ion-card-subtitle>{{usuario.rut}} - {{usuario.fec_nac}} - {{usuario.semestre}} </ion-card-subtitle>
             </ion-card-header>
             <ion-button slot="end" color="warning" (click)="buscar(usuario.id)">Buscar</ion-button>
-            <ion-button slot="end" color="danger" (click)="eliminar(usuario.id)">Eliminar</ion-button>
+            <ion-button slot="end"  color="danger" (click)="eliminar(usuario.id)">Eliminar</ion-button>
           </ion-item>
           <ion-card-content>
             {{usuario.tipo_usuario}}
