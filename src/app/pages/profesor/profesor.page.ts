@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingController, ToastController } from '@ionic/angular';
+import { element } from 'protractor';
 import { Asignaturas } from 'src/app/interfaces/esquemas';
 import { FirestService } from 'src/app/services/firest.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -20,11 +21,6 @@ export class ProfesorPage implements OnInit {
   asignaturas: any [] = [];
   asignatura: any [] = [];
   asig: any;
-
-  //Variables para trabajar asistencia
-
-  asistencias: any[] = [];
-  asist: any;
 
   //Variables para el cod. qr
   elementType = 'canvas';
@@ -53,17 +49,14 @@ export class ProfesorPage implements OnInit {
           let asig = a.payload.doc.data();
           asig['id'] = a.payload.doc.id;
           this.asignaturas.push(asig);
-          console.log(this.rut)
-          console.log(this.asignaturas)
-          this.asignatura = this.asignaturas.filter(a => a.rutprof_asignatura == this.rut)
-          console.log(this.asignatura)
+          this.asignatura = this.asignaturas.find(a => a.rutprof_asignatura == this.rut)
         }
       }
     );
   }
 
   //Código QR
-  async generarQR(cod_asig){
+  async generarQR(cod_asig){    
 
     let asist = {
       idAsist: '',
@@ -73,34 +66,30 @@ export class ProfesorPage implements OnInit {
     };
 
     var almnAsistTemp = [];
+    var alumnosAsig = [];
 
     const idAsistTemp = this.firestService.getId();
-
-    // console.log(cod_asig)
-    let alumnosAsig = [];
+    
     this.firestService.getDoc<Asignaturas>('asignaturas', cod_asig).subscribe(
       (resp) => {
         resp.data().asistencia.forEach((aux) => {
           alumnosAsig.push(aux);
-        })
+        });
       }
-    )
+    );
     // console.log(alumnosAsig);
 
-    alumnosAsig.forEach(
-      (aux) => {
+    alumnosAsig.forEach(element => {
         var asistAlmn = {
           rut: '',
           asistencia: ''
         };
-        asistAlmn.rut = aux;
+        console.log(element);
+        asistAlmn.rut = element;
         asistAlmn.asistencia = 'ausente';
         almnAsistTemp.push(asistAlmn);
-      console.log(aux);
-      console.log(asistAlmn);
       }
-    )
-    // console.log(alumnosAsig)
+    );
 
     var d = new Date();
     let day = d.toLocaleString();
@@ -113,11 +102,10 @@ export class ProfesorPage implements OnInit {
     let resp = this.firestService.addFire('asistencia_clase', asist);
 
     if(resp){
-      this.cargandoPantalla('Iniciando clase...');
       if(this.value == ''){
         this.value = idAsistTemp;
       }
-      console.log(resp);
+      this.cargandoPantalla('Iniciando clase...');
     }else{
       this.tostadaError();
     }

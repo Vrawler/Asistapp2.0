@@ -100,6 +100,39 @@ export class FirestService {
       var recId = await this.fire.collection(coleccion).add(value);
       return recId.id;
     } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getAsig(coleccion, id){
+    try {
+     let aux = this.fire.collection(coleccion).doc(id).get();
+     return aux
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  getAsists(coleccion){
+    try {
+      return this.fire.collection(coleccion).snapshotChanges();
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  getAsist(coleccion, id){
+    try {
+     return this.fire.collection(coleccion).doc(id).get();
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  addAlmn(coleccion,id,value){
+    try {
+      this.fire.collection(coleccion).doc(id).set(value);
+    } catch (error) {
       console.log(error)
     }
   }

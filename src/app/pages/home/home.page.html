@@ -23,7 +23,7 @@
         <ion-label>Administrar clases</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button tab="alumno" *ngIf="usuario.tipo_usuario == 'alumno'">
+      <ion-tab-button tab="alumno/{{usuario.rut}}" *ngIf="usuario.tipo_usuario == 'alumno'">
         <ion-icon name="school-outline"></ion-icon>
         <ion-label>Alumno</ion-label>
       </ion-tab-button>
