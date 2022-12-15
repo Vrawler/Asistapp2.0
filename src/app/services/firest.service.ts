@@ -13,6 +13,17 @@ export class FirestService {
 
   constructor(private fire: AngularFirestore, private router: Router) { }
 
+  //Método para crear id
+  getId() {
+    return this.fire.createId();
+  }
+
+  //Métodos para interface
+  getDoc<tipo>(path: string, id: string) {
+    const collection = this.fire.collection<tipo>(path);
+    return collection.doc(id).get();
+  }
+  
   //Métodos para firebase 
   addFire(coleccion, value){
     try {

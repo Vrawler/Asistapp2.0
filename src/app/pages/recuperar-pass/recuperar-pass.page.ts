@@ -13,12 +13,11 @@ export class RecuperarPassPage implements OnInit {
 
   //Variables para trabajar los datos
   usuarios: any[] = [];
-  email: string;
+  email: string = '';
+  buscarEmail: any = '';
 
   //Variables para trabajar el storage
-  KEY_USUARIOS = 'usuarios';
-
-
+  // KEY_USUARIOS = 'usuarios';
 
   constructor(
     private toastController: ToastController, 
@@ -28,8 +27,8 @@ export class RecuperarPassPage implements OnInit {
     private firestService: FirestService
     ) { }
 
-  async ngOnInit() {
-    this.usuarios = await this.usuarioService.obtenerUsuarios(this.KEY_USUARIOS);
+  ngOnInit() {
+    this.cargarDatos()  
   }
 
   cargarDatos(){
@@ -46,17 +45,14 @@ export class RecuperarPassPage implements OnInit {
     );
   }
 
-async recuperarContra(){
-  var validarEmail = await this.usuarioService.validarCorreorpw(this.email)
-    if (validarEmail != undefined) {
-      if (validarEmail.email == this.email) {
-        //alert('Se envió un correo electrónico de recuperación');
-        this.presentAlert('Se envió un correo electrónico de recuperación')
-      }
+  async recuperarContra(){
+    this.buscarEmail = this.usuarios.find(u => u.email == this.email);
+    if(this.buscarEmail != undefined){
+      this.presentAlert('Contraseña enviada al correo')
     }else{
       this.tstError();
     }
-}
+  }
 
   async tstError() {
     const toast = await this.toastController.create({
@@ -79,5 +75,5 @@ async recuperarContra(){
   //Función para botón
   btnInicio = function(){
     this.router.navigate(['/inicio']);
-  }
+  }
 }
